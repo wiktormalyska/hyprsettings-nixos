@@ -12,13 +12,28 @@ with open(html_file, "r", encoding="UTF-8") as html_content:
 
 
 class Api:
-    def printshit(self):
-        return "shit"
+    def init(self):
+        return self.get_config()
+
+    def get_config(self):
+        config_path = Path.home() / ".config" / "hypr" / "hyprland.conf"
+        config = ConfigParser(config_path).root.to_json()
+        return config
+
+    def save_config(self, json: str):
+        pass
 
 
 api = Api()
 
 mimetypes.add_type("application/javascript", ".js")
-window = webview.create_window("Hyprland Config Editor", "ui/index.html", js_api=api)
+window = webview.create_window(
+    "Hyprland Config Editor",
+    "ui/index.html",
+    js_api=api,
+    transparent=True,
+    # frameless=True,r
+)
+
 # window.load_css(stylesheet=css_file)
-webview.start(gui="gtk", debug=True)
+webview.start(gui="gtk", debug=True, private_mode=False, storage_path=".pywebview")

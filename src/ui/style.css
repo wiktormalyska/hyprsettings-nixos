@@ -1,17 +1,17 @@
 :root.tokyo {
-  --bg: #0a0047;
-  --sbg: #004687;
-  --prim: #ff4499;
-  --sec: #00ffd2;
+  --bg: #0a0047de;
+  --sbg: #0a3964;
+  --prim: #05c5a2;
+  --sec: #ff4499;
 }
 :root.mocha {
-  --bg: #1a1823;
-  --sbg: #1a1823;
+  --bg: #1a1823de;
+  --sbg: #36314e;
   --prim: #c29df1;
   --sec: #f3bce6;
 }
 :root.siloe {
-  --bg: #f9e0e3;
+  --bg: #f9e0e3de;
   --sbg: #fffbdc;
   --prim: #602766;
   --sec: #713d77;
@@ -28,15 +28,18 @@
   margin: 0;
   box-sizing: border-box;
   transition: all 0.1s ease-in-out;
-  background-color: var(--bg);
-  color: var(--prim);
+  transition: color 0.05s;
+  border-radius: 2px;
 }
 
 html {
   height: 100%;
   overflow-x: hidden;
   font-size: 62.5%;
+  background-color: var(--bg);
+  color: var(--prim);
   font-family: "CommitMono Nerd Font Mono", monospace;
+  min-height: 0;
 }
 
 body {
@@ -46,6 +49,16 @@ body {
   flex-direction: column;
   min-height: 100%;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--prim);
+}
+header:hover {
+  transform: scale(1.01);
 }
 
 div#main {
@@ -53,6 +66,7 @@ div#main {
   display: flex;
   flex: 1;
   flex-direction: row;
+  min-height: 0;
 }
 
 aside#sidebar {
@@ -69,37 +83,144 @@ aside#sidebar ul li {
   align-content: center;
   height: 3rem;
   padding-left: 2rem;
-  border-radius: 1ch;
+  border-radius: 0ch;
+  overflow: hidden;
 }
 aside#sidebar ul li:hover {
   transform: scale(1.05);
   background-color: var(--sec);
   border: 1px solid var(--sec);
   color: var(--bg);
+  font-weight: 600;
 }
 aside#sidebar ul li:active {
   transform: scale(0.95);
   background-color: var(--sec);
+  font-weight: 600;
+}
+aside#sidebar ul li.selected {
+  background-color: var(--sec);
+  color: var(--bg);
+  font-weight: 600;
 }
 
-header {
-  border-bottom: 1px solid var(--prim);
-  padding: 1rem;
+#content-area {
+  flex: 1;
+  padding-left: 2rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+#content-area .config-set {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0rem;
+  overflow: auto;
+  height: 100%;
+}
+#content-area h1 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
 }
 
 footer {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 footer > * {
   font-size: 1rem;
 }
 
+a {
+  background-color: none;
+  color: var(--prim);
+}
+a:checked {
+  color: var(--prim);
+}
+
 button {
+  background: none;
   border: none;
+  cursor: pointer;
 }
 button:hover {
   transform: scale(1.1);
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden;
+  flex: 0;
+}
+
+.editor-item {
+  background-color: var(--bg);
+  background-blend-mode: darken;
+  opacity: 0.7;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  transition: opacity 1s;
+}
+.editor-item:focus-within {
+  opacity: 1;
+  border: 1px solid var(--prim);
+}
+.editor-item .keybind-editor {
+  display: flex;
+  flex-direction: row;
+}
+.editor-item .keybind-editor > * {
+  flex: 1;
+  margin-right: 2rem;
+}
+
+.comment-area {
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.comment-area > * {
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  height: 2rem;
+}
+.comment-area > *:focus {
+  opacity: 1;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid var(--sec);
+}
+.comment-area .comment {
+  display: flex;
+  font-style: italic;
+  padding: 2px;
+  background-color: rgba(0, 0, 0, 0);
+  height: 2rem;
+  color: var(--prim);
+  width: 100%;
+  border: 0;
+  resize: none;
+  align-items: center;
+}
+.comment-area .comment:hover {
+  opacity: 1;
+  cursor: text;
+}
+.comment-area .comment [contenteditable=true] {
+  cursor: text;
+}
+.comment-area .comment-hashtag {
+  align-items: center;
+  padding-top: 4px;
 }
 
 /*# sourceMappingURL=style.css.map */

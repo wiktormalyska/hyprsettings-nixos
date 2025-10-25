@@ -5,6 +5,16 @@ build/
 dist/
 wheels/
 *.egg-info
+.venv/
+.vscode/
+hsts/
+mediakeys/
+cache/
+domcache/
+pywebview/
+.pywebview/
+.mypy_cache/
+storage/
 
 # Virtual environments
 .venv
@@ -20,3 +30,4 @@ src/ui/fonts/CommitMonoNerdFontPropo-Bold.otf
 src/ui/fonts/CommitMonoNerdFontPropo-BoldItalic.otf
 src/ui/fonts/CommitMonoNerdFontPropo-Italic.otf
 src/ui/fonts/CommitMonoNerdFontPropo-Regular.otf
+

@@ -1,12 +1,15 @@
 import os
 from pathlib import Path
+from typing import Literal, get_args
+import json
+import uuid
+from glob import glob
+
 import rich.pretty as Pretty
 from rich.console import Console
 import rich
-from typing import Literal, get_args
-from typing_extensions import assert_type
-import json
 import rich.traceback
+
 
 rich.traceback.install(show_locals=True)
 
@@ -28,12 +31,13 @@ class Node:
         self.comment = comment
         self.children: list = []
         self.position = position
+        self.uuid = str(uuid.uuid4()).replace("-", "")[:8]
 
     def addChildren(self, child):
         self.children.append(child)
 
     def to_dict(self) -> dict:
-        dict = {"type": self.type, "name": self.name}
+        dict = {"type": self.type, "name": self.name, "uuid": self.uuid}
         # new
         if self.comment:
             dict["comment"] = self.comment
@@ -102,6 +106,27 @@ class Node:
             print(f"{self.name} cannot be formatted to a hyprland file")
         return ""
 
+    @staticmethod
+    def from_dict(data: dict) -> "Node":
+        node = Node(
+            name=data["name"],
+            type_=data["type"],
+            value=data.get("value"),
+            comment=data.get("comment"),
+            position=data.get("position"),
+        )
+        if "uuid" in data:
+            node.uuid = data["uuid"]
+        for child in data.get("children", []):
+            node.addChildren(Node.from_dict(child))
+        return node
+
+    @staticmethod
+    def from_json(json_string: str) -> "Node":
+        data = json.loads(json_string)
+        data = Node.from_dict(data)
+        return data
+
     def __repr__(self):
         if self.type == "KEY":
             return f"Node: {self.name} with type {self.type}"
@@ -125,6 +150,11 @@ class ConfigParser:
         self.stack = [self.root]
         self.parse_config(path)
 
+    @classmethod
+    def load(cls, path: Path) -> Node:
+        parser = cls(path)
+        return parser.root
+
     def parse_config(self, config_path):
         with open(config_path, "r", encoding="UTF-8") as config_file:
             new_file_node = Node(Path(config_path).name, "FILE", str(config_path))
@@ -134,36 +164,53 @@ class ConfigParser:
             for line_content in config_file:
                 check: str = self.sanitize(line_content)
                 line, comment = self.get_parts(line_content, "#")
+                colon_index = line_content.find(":")
+                equal_index = line_content.find("=")
+                position = ":".join(node.name for node in self.stack)
                 # print(line_content)
                 if not check and not comment:
-                    blank_line = Node("blank", "BLANK")
+                    blank_line = Node(
+                        "blank", "BLANK", value=None, comment=None, position=position
+                    )
                     self.stack[-1].addChildren(blank_line)
                     continue
-
+                if (
+                    colon_index != -1
+                    and equal_index != -1
+                    and colon_index < equal_index
+                ):
+                    # TODO:IMPLEMENT COLON GROUPS
+                    # print(f"Line {line_content} has ':' before '='")
+                    pass
                 if line_content.strip().startswith("#"):
                     comment_node = Node(
-                        "comment", "COMMENT", value=None, comment=comment
+                        "comment",
+                        "COMMENT",
+                        value=None,
+                        comment=comment,
+                        position=position,
                     )
                     self.stack[-1].addChildren(comment_node)
                 elif check.endswith("{"):
                     name = line.rstrip("{").strip()
-                    child_node = Node(name, "GROUP", value=None, comment=comment)
+                    child_node = Node(
+                        name, "GROUP", value=None, comment=comment, position=position
+                    )
                     self.stack[-1].addChildren(child_node)
                     self.stack.append(child_node)
                 elif check.endswith("}"):
                     groupend_node = Node(
-                        "group_end", "GROUPEND", value=None, comment=comment
+                        "group_end",
+                        "GROUPEND",
+                        value=None,
+                        comment=comment,
+                        position=position,
                     )
                     # print(comment)
                     self.stack[-1].addChildren(groupend_node)
                     self.stack.pop()
                 else:
                     name, value = self.get_parts(line, "=")
-                    position = (
-                        ":".join(node.name for node in self.stack[2:])
-                        if self.stack[2:]
-                        else ""
-                    )
                     # print(position)
                     if value is None:
                         print(f"{value} has no value.")
@@ -173,13 +220,13 @@ class ConfigParser:
                     self.stack[-1].addChildren(node)
 
                 if check.startswith("source"):
-                    source, file = self.get_parts(line, "=")
-                    sources.append((config_path.parent / file).resolve())
+                    source, file_path = self.get_parts(line, "=")
+                    # if Path(file_path).is_file():
+                    sources.append((config_path.parent / file_path).resolve())
+
             self.stack.pop()
             if sources:
                 for source in sources:
-                    pass
-                    # print(source)
                     self.parse_config(source)
 
     def sanitize(self, string: str) -> str:
@@ -201,9 +248,15 @@ class ConfigParser:
             return part1, part2
 
 
-# os.system("clear")
-# config = ConfigParser(config_path).root.to_json()
-# rich.print_json(config)
+os.system("clear")
+config_node1 = ConfigParser.load(config_path).to_json()
+rich.print_json(config_node1)
+# with open("config_node1.txt", "w", encoding="UTF-8") as node1:
+#     node1.write(config_node1)
 
+# config_node2 = Node.from_json(config_node1).to_json()
+# with open("config_node2.txt", "w", encoding="UTF-8") as node2:
+#     node2.write(config_node2)
+# rich.print(config_node2)
 # hyrpland_files = ConfigParser(config_path).root.to_hyprland()
 # print_hyprland(hyrpland_files, print=True, save=True)
