@@ -2,7 +2,8 @@ import { waitFor } from "./utils.js"
 let settingsEl = document.querySelector(".config-set#settings")
 
 
-export function renderSettings() {
+export async function renderSettings() {
+	await waitFor(() => window.pywebview?.api?.save_window_config)
 	settingsEl = document.querySelector(".config-set#settings")
 	createLineCommentsVisibilitySetting()
 }
@@ -30,21 +31,22 @@ class CheckBoxItem {
 		this.settingContainer.appendChild(this.label)
 		settingsEl.appendChild(this.settingContainer)
 	}
+
 	return() {
-		return this.settingContainer, this.checkbox
+		return { container: this.settingContainer, checkbox: this.checkbox }
 	}
 
 }
 
 
 function createLineCommentsVisibilitySetting() {
-	let showlinecomContainer, showlinecomCheckbox = new CheckBoxItem("show-line-comments",
-		"Show line comments", "show_line_comments", true).return()
-	showlinecomCheckbox.addEventListener("change", (e) => {
+	let { container, checkbox } = new CheckBoxItem("show-line-comments",
+		"Show line comments", "show_line_comments", window.config["show_line_comments"] || true).return()
+	checkbox.addEventListener("change", async (e) => {
 		const el = e.target
-		console.log("toggled comments")
 		window.config["show_line_comments"] = el.checked
-		localStorage.setItem("config", JSON.stringify(window.config))
+		await window.pywebview.api.save_window_config(JSON.stringify(window.config))
+		console.log(`Toggled: ${config_key} to ${el.checked}`)
 		let commentItems = document.querySelectorAll(".editor-item:has(>.editor-item-comment)")
 		if (el.checked) {
 			commentItems.forEach(i =>

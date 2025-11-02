@@ -48,11 +48,12 @@ class Api:
 				return self.window_config
 
 	def save_window_config(self, json_fromjs):
+		print(f"Called save window config {json_fromjs}")
+		config_from_json = json.loads(json_fromjs)
+		print(config_from_json)
+		for key in config_from_json:
+			self.window_config["config"][key] = config_from_json[key]
 		window_config_path = Path.home() / ".config" / "hypr" / "hyprsettings.toml"
-		config_from_json = json.loads(json_fromjs)["config"]
-		for key, value in config_from_json:
-			self.window_config["config"][key] = value
-
 		with open(window_config_path, "w", encoding="utf-8") as config_file:
 			config_tosave = toml.dumps(self.window_config)
 			config_file.write(config_tosave)
