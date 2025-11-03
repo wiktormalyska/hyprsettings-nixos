@@ -1,13 +1,12 @@
 # Hyprsettings
 
 Hyprsettings is a configurator for `hyprland.conf` (and its included files), built for people like me who don't like faffing around with configs.  
-Made with Python and web technologies.  
+Made with Python and web technologies.
 
-![This is in alpha state.]
+> [!IMPORTANT]
+> This is in alpha state.
 
 You can fork this repo, make changes, and submit pull requests. Please also submit bugs, start discussions, etc. I'd love to hear from you!
-
----
 
 ## Testing the UI
 
@@ -30,8 +29,6 @@ sudo pacman -Syu python python-gobject gtk3
 python src/ui.py
 ```
 
----
-
 ## Arch Linux Installation (Dependencies + Hyprland bind)
 
 For Arch users, you can run the following single block to install dependencies and add a keybind to your Hyprland configuration:
@@ -44,7 +41,6 @@ echo 'bind = SUPER, I, Exec, python ~/hyprsettings/src/ui.py' >> ~/.config/hypr/
 
 > Make sure to replace `SUPER, I` with the key combination you want to use.
 
----
 
 ## Configuration and Theming
 
@@ -54,9 +50,7 @@ Hyprsettings will create a configuration file at:
 ~/.config/hypr/hyprsettings.toml
 ```
 
-The defaults should be fine, but if you like tweaking, you can explore and modify the file. Be careful, though—I don’t have extensive safeguards and fallbacks right now.
-
----
+The defaults should be fine, but if you like tweaking, you can explore and modify the file. Be careful, though I don’t have extensive safeguards and fallbacks right now.
 
 ## A Personal Note
 
