@@ -1,7 +1,12 @@
 # Hyprsettings
 
 Hyprsettings is a configurator for `hyprland.conf` (and its included files), built for people like me who don't like faffing around with configs.  
-Made with Python and web technologies.
+Made with Python, web technologies via PyWebviewGTK,
+vanilla JS and some js libs.
+
+<img width="799" height="598" alt="image" src="https://github.com/user-attachments/assets/07ed324f-0939-4f01-8475-401cf650bfc0" />
+
+
 
 > [!IMPORTANT]
 > This is in alpha state.
