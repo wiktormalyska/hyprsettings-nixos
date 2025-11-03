@@ -33,6 +33,9 @@ async function load_config() {
     for (let key in window.windowConfig.config) {
         window.config[key] = windowConfig.config[key]
     }
+    if (window.config["first_run"]) {
+        document.getElementById("onboarding").classList.remove("hidden")
+    }
 }
 
 

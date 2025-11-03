@@ -77,7 +77,7 @@ if __name__ == "__main__":
 	api = Api()
 	mimetypes.add_type("application/javascript", ".js")
 	window = webview.create_window(
-		"Hyprland Config Editor",
+		"HyprSettings",
 		"ui/index.html",
 		js_api=api,
 		transparent=True,
