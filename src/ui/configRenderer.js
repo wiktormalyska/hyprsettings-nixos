@@ -1,12 +1,12 @@
+/* eslint-env browser */
+/* global pywebview, TomSelect */
+
 // TODO: WHAT TO DO WHEN COMMENTS ARE UNCOMMENTED?
 // IDEA: change value to key and parse
 import { ContextMenu } from "./contextMenu.js";
 import { bindFlags, modkeys, dispatchers, dispatcherParams, noneDispatchers } from "./hyprland-specific/binds.js"
 import { debounce, saveKey, waitFor } from "./utils.js"
 // @ts-ignore
-// window.config = window.config || {};
-// window.config["dryrun"] = false
-// window.config["compact"] = true
 
 
 //tabids for comment stacks so configRenderer() knows where to put them
@@ -209,7 +209,7 @@ class EditorItem_Comments {
         }
         this.textarea = this.el.appendChild(document.createElement("textarea"))
         // textarea.contentEditable = "true"
-        this.textarea.setAttribute("rows", 1)
+        this.textarea.setAttribute("rows", "1")
         this.textarea.classList.add("editor-item-comment")
         this.textarea.value = comment
         this.saveDebounced = debounce(() => this.save(), 100);
@@ -266,6 +266,7 @@ class EditorItem_Binds {
         }
         const template = document.getElementById("keybind-template")
         this.el = template.content.firstElementChild.cloneNode(true)
+        // @ts-ignore
         if (window.config.compact) {
             this.el.classList.add("compact")
         }
@@ -274,7 +275,6 @@ class EditorItem_Binds {
         }
         this.el.setAttribute("title", position)
         this.el.dataset.name = name
-        // console.log(name, this.el.dataset.name)
         this.el.dataset.uuid = uuid
         this.el.dataset.value = value ?? ""
         this.el.dataset.comment = comment ?? ""
@@ -285,14 +285,13 @@ class EditorItem_Binds {
         this.contextMenu = new ContextMenu([
             { label: "Add Above", icon: "󰅃", action: () => this.addAbove() },
             { label: "Add Below", icon: "󰅀", action: () => this.addAbove() },
-            { label: "Disable Item", icon: "󰈉", action: () => this.disable() },
+            { label: "Toggle Disable", icon: "󰈉", action: () => this.disable() },
             { label: "Delete Key", icon: "󰗩", action: () => this.addAbove() }
         ])
         this.el.appendChild(this.contextMenu.el)
         this.saveDebounced = debounce(() => this.save(), 100);
 
         let values = value.split(",", 4)
-        // console.log(values)
         const renderflags = {
             option: function (data, escape) {
                 return `<div title="${data.description}">` + escape(data.text) + `</div>`
@@ -510,7 +509,6 @@ class EditorItem_Binds {
         const commentToSave = this.comment_el.value.trim() === "" ? null : this.comment_el.value;
         let type = this.el.dataset.type
         let disabled = this.el.dataset.disabled === "true"
-        console.log(`this key is disabled`, disabled)
         saveKey(type, name, uuid, position, value, commentToSave, disabled)
     }
 

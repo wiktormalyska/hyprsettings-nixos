@@ -19,8 +19,8 @@ $transition-main: background-color $transition-speed-normal ease,
 
 // Sidebar tab active state (for :hover, :active, .selected)
 @mixin sidebar-item-active {
-	background-color: var(--sec);
-	color: var(--bg);
+	background-color: var(--accent);
+	color: var(--text-contrast);
 	font-weight: 600;
 }
 
@@ -40,43 +40,53 @@ $transition-main: background-color $transition-speed-normal ease,
 		transform: translateX(calc(-100% + 100%));
 	}
 }
+
 /* =================================
    2. Theming & Base Styles
    ================================= */
-
-// --- Theming Root ---
 :root {
 	// These are now themeable from JS!
 	--spacing-unit: 1rem;
 	--border-rad: 5px;
 	--font-primary: "CommitMono Nerd Font Mono";
+	--background-alpha: 0.9;
 
-	// Themes
-	// improve theming: needs at least three surface colors
-	// and three+ text colors (prim, sec, tert with highlight variants)
-	&.tokyo {
-		--bg: #140f30de;
-		--sbg: #094277;
-		--prim: #05c5a2;
-		--prim2: #5dc9b5;
-		--sec: #ec84b3;
-	}
-	&.mocha {
-		--bg: #1e1e2e;
-		--sbg: #16122d;
-		--bg1: #212547;
-		--bg2: #585b70;
-		--prim: #b09fe3;
-		--prim2: #bac2de;
-		--prim3: #a6adc8;
-		--sec: #f3bce6;
-	}
-	&.siloe {
-		--bg: #f9e0e3de;
-		--sbg: #fbedeede;
-		--prim: #522856;
-		--sec: #713d77;
-	}
+	/* Surfaces */
+	--surface-0: #1e1e2e;
+	--surface-1: #181825;
+	--surface-2: #11111b;
+	--surface-border: #585b70;
+
+	/* Text hierarchy */
+	--text-0: #cdd6f4;
+	--text-1: #bac2de;
+	--text-2: #a6adc8;
+	--text-3: #9399b2;
+	--text-4: #7f849c;
+	--text-disabled: #6c7086;
+	--text-contrast: #11111b;
+
+	/* Accents */
+	--accent: #89b4fa;
+	--accent-hover: #74c7ec;
+	--accent-active: #cba6f7;
+	--accent-success: #a6e3a1;
+	--accent-warning: #f9e2af;
+	--accent-danger: #f38ba8;
+
+	/* Common colors */
+	--red: #f38ba8;
+	--orange: #fab387;
+	--yellow: #f9e2af;
+	--green: #a6e3a1;
+	--teal: #94e2d5;
+	--blue: #89b4fa;
+	--pink: #f5c2e7;
+	--purple: #cba6f7;
+
+	/* Utilities */
+	--overlay: #7f849c;
+	--shadow: #6c7086;
 }
 
 // --- Font ---
@@ -93,11 +103,19 @@ html {
 	height: 100%;
 	font-size: 62.5%; // 1rem = 10px
 	box-sizing: border-box;
-	background-color: var(--bg);
-	color: var(--prim);
-	font-family: var(--font-primary); // Use the CSS var
+	background-color: (var(--surface-0));
+	color: var(--text-0);
+	font-family: var(--font-primary) !important;
 	overflow: hidden;
 	min-height: 0;
+	opacity: 1; //makes window see through a bit
+}
+
+html,
+body {
+	-webkit-font-smoothing: antialiased; /* macOS/WebKit */
+	-moz-osx-font-smoothing: grayscale; /* macOS/Firefox */
+	text-rendering: optimizeLegibility; /* improves kerning and ligatures */
 }
 
 *,
@@ -106,14 +124,15 @@ html {
 	margin: 0;
 	padding: 0;
 	box-sizing: inherit; // Better box-sizing reset
-	scrollbar-gutter: stable !important;
+	// scrollbar-gutter: stable !important;
+	// filter: saturate(1.1), brightness(1.1), contrast(1.5);
 }
 
 body {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	padding: var(--spacing-unit); // Use the CSS var
+	// padding: var(--spacing-unit); // Use the CSS var
 	font-size: 1.6rem; // Default to 16px
 	max-width: 100%;
 	min-height: 0; // Fix for flex children
@@ -129,9 +148,10 @@ body {
 
 header {
 	padding: var(--spacing-unit); // Use var
-	border-bottom: 1px solid var(--prim);
+	border-bottom: 1px solid var(--surface-border);
 	border-radius: 0;
-	transition: transform $transition-speed-normal ease; // Specific transition
+	transition: transform $transition-speed-normal ease;
+	font-weight: 800;
 
 	&:hover {
 		transform: scale(1.01);
@@ -141,9 +161,10 @@ header {
 #main {
 	display: flex;
 	flex: 1; // Take remaining vertical space
-	padding-top: var(--spacing-unit); // Use var
+	// padding-top: var(--spacing-unit); // Use var
 	min-height: 0; // Allow content to scroll
 	max-width: 100%;
+	background-color: var(--surface-0);
 }
 
 #sidebar {
@@ -152,24 +173,26 @@ header {
 	min-width: 0;
 	overflow-y: auto;
 	overflow-x: hidden;
+	background-color: var(--surface-0);
 
 	ul {
 		display: flex;
 		list-style: none;
 		flex-direction: column;
-		padding-right: 1rem;
+		// padding-right: 1rem;
 	}
 }
 
 #content-area {
 	display: flex;
 	height: 100%;
-	// padding-left: var(--spacing-unit); // Use var
+	padding-top: var(--spacing-unit); // Use var
 	flex: 0 0 80%; // Strict 80%
 	max-width: 80%; // Enforce max width
 	flex-direction: column;
 	min-height: 0;
 	padding-left: 1.5rem;
+	background-color: var(--surface-1);
 }
 
 footer {
@@ -179,7 +202,8 @@ footer {
 	// flex-direction: row-reverse; // This moves items to the right
 	justify-content: flex-end;
 	// margin-top: var(--spacing-unit); // Use var
-
+	padding-left: var(--spacing-unit);
+	padding-right: var(--spacing-unit);
 	> * {
 		font-size: 1rem;
 	}
@@ -194,7 +218,7 @@ footer {
 .tab-separator {
 	margin-left: var(--spacing-unit); // Use var
 	margin-top: var(--spacing-unit); // Use var
-	border-bottom: 3px solid var(--sbg);
+	border-bottom: 3px solid var(--surface-1);
 	border-radius: 0;
 	font-size: 1.2rem;
 }
@@ -203,16 +227,17 @@ footer {
 	display: flex; // For vertical alignment
 	align-items: center;
 	height: 3rem;
-	padding-left: var(--spacing-unit); // Use var
+	padding-left: var(--spacing-unit);
 	width: 100%;
-	border-radius: var(--border-rad);
+	// border-radius: var(--border-rad);
 	@include text-ellipsis;
 	transition: $transition-main, transform $transition-speed-normal ease;
 	// @include scroll-on-hover(7s);
+	opacity: 0.9;
 
 	&:hover {
 		@include sidebar-item-active; // Use mixin
-		// border: 1px solid var(--sec);
+		// border: 1px solid var(--accent);
 	}
 
 	&:active {
@@ -222,6 +247,7 @@ footer {
 
 	&.selected {
 		@include sidebar-item-active; // Use mixin
+		opacity: 1;
 	}
 }
 
@@ -236,12 +262,6 @@ footer {
 	overflow-y: scroll;
 	margin-top: 1rem;
 	padding-right: 2rem;
-
-	// Nest child selectors for clarity
-	h1 {
-		margin-bottom: var(--spacing-unit); // Use var
-		font-size: 1.6rem;
-	}
 
 	// Specific styles for the #settings tab
 	&#settings {
@@ -270,15 +290,25 @@ footer {
 	}
 }
 
+h1#config-set-title {
+	margin-bottom: var(--spacing-unit); // Use var
+	// font-size: 1.6rem;
+	color: var(--accent);
+}
+
 .config-group {
 	position: relative;
-	border: 1px solid var(--prim);
+	border: 1px solid var(--surface-border);
 	border-radius: var(--border-rad);
 	margin-top: var(--spacing-unit);
 	margin-bottom: var(--spacing-unit);
 	padding: 2rem;
 	display: flex;
 	flex-direction: column;
+
+	> .config-group {
+		margin-top: 2rem;
+	}
 }
 
 /* the floating label on the border */
@@ -288,11 +318,13 @@ footer {
 	top: 0;
 	left: 1rem; /* adjust for spacing */
 	transform: translateY(-50%);
-	background-color: var(--bg, #fff); /* match your group background */
+	background-color: var(--surface-0); /* match your group background */
 	padding: 0 0.5em;
 	font-size: 1.6rem;
-	color: var(--prim);
+	color: var(--text-1);
 	text-transform: capitalize;
+	font-weight: 800;
+	color: var(--text-0);
 }
 
 // --- Editor Item ---
@@ -305,19 +337,19 @@ footer {
 	margin-bottom: var(--spacing-unit); // Use var
 	padding: 0.5rem;
 	border: 1px solid transparent;
-	background-color: var(--sbg);
-	opacity: 0.8;
+	background-color: var(--surface-0);
+	opacity: 0.8; // Kept for interaction: fade non-focused items
 	// background-blend-mode: multiply;
 	border-radius: var(--border-rad); // Use var
 	font-size: 1.6rem;
 
 	&:focus-within {
-		border-color: var(--prim);
+		border-color: var(--accent);
 		opacity: 1;
 	}
 	&:focus-visible {
 		outline: none;
-		border: 1px dashed var(--sec);
+		border: 1px dashed var(--accent-active);
 	}
 
 	&.compact {
@@ -333,8 +365,7 @@ footer {
 		margin-bottom: 2px;
 		font-size: 1.4rem;
 		i {
-			color: var(--sec);
-			opacity: 0.7;
+			color: var(--text-2); // Replaced --sec and opacity
 		}
 	}
 
@@ -346,8 +377,8 @@ footer {
 		flex-direction: row;
 		> * {
 			margin-right: var(--spacing-unit); // Use var
-			background-color: var(--bg1);
-			color: var(--sec);
+			background-color: var(--surface-1);
+			color: var(--pink); // Kept pink as it seemed intentional
 			flex: 1;
 			border-radius: var(--border-rad);
 			font-size: 1.6rem !important;
@@ -370,18 +401,19 @@ footer {
 
 		> * {
 			height: 2rem;
-			opacity: (0.6);
+			// opacity: (0.6); // Removed, handled by text color
 			align-items: center;
 			justify-content: center;
 			&:focus {
 				border: none;
-				border-bottom: 1px solid var(--sec) !important;
-				opacity: 1;
+				border-bottom: 1px solid var(--accent) !important;
+				// opacity: 1; // Removed
 				outline: none;
 			}
 		}
 
 		&:has(> textarea:placeholder-shown) {
+			// Removed opacity
 			opacity: 0.6;
 		}
 
@@ -392,18 +424,22 @@ footer {
 			width: 100%;
 			border: 0;
 			background-color: transparent;
-			color: var(--prim);
+			color: var(--text-1); // Dim color for base state
 			font-style: italic;
 			align-items: center;
 			resize: none;
 			&:hover {
 				cursor: text;
-				opacity: 1;
+				color: var(--text-1); // Brighten on hover
+			}
+			&:focus {
+				color: var(--text-1); // Brighten on focus
 			}
 		}
 
 		.comment-hashtag {
 			padding-top: 0px;
+			color: var(--text-1);
 		}
 	}
 }
@@ -424,12 +460,12 @@ footer {
 		width: 100%;
 		border: 0;
 		background-color: transparent;
-		color: var(--prim);
+		color: var(--text-4); // Dimmer color for base state
 		font-style: italic;
 		// line-height: 0.8rem;
 		@include text-ellipsis;
 		box-shadow: none !important;
-		opacity: 0.5;
+		// opacity: 0.5; // Removed, handled by text color
 		outline: none !important;
 		resize: none;
 		overflow: hidden;
@@ -441,12 +477,13 @@ footer {
 		}
 		&:hover {
 			cursor: text;
-			opacity: 1;
+			color: var(--text-1); // Brighten on hover
 		}
 		&:focus,
 		&:focus-visible {
 			outline: none;
-			border: 1px dashed var(--sec);
+			border: 1px dashed var(--accent-active);
+			color: var(--text-1); // Brighten on focus
 		}
 	}
 }
@@ -462,7 +499,7 @@ footer {
 	// overflow-x: hidden;
 	display: block;
 	border-radius: var(--border-rad);
-	color: var(--sec);
+	color: var(--text-2); // Using semantic color for TODO
 	// height: 1.6rem;
 	width: 100%;
 	line-height: 2rem;
@@ -471,10 +508,10 @@ footer {
 	}
 	> span {
 		&#key {
-			color: var(--sec);
+			color: var(--accent);
 		}
 		&#value {
-			color: var(--prim);
+			color: var(--teal);
 		}
 	}
 }
@@ -486,12 +523,12 @@ footer {
 // --- Base Elements ---
 a {
 	background: none;
-	color: var(--prim);
+	color: var(--accent);
 	text-decoration: none; // Added
 	transition: color $transition-speed-normal ease;
 
 	&:hover {
-		color: var(--sec); // Added
+		color: var(--accent-hover); // Added
 	}
 }
 
@@ -499,7 +536,7 @@ button#theme-toggle {
 	border: none;
 	background: none;
 	cursor: pointer;
-	color: var(--prim); // Added
+	color: var(--text-1); // Added
 	font-size: 2rem;
 	margin-left: 2rem;
 	transition: transform $transition-speed-normal ease,
@@ -507,7 +544,7 @@ button#theme-toggle {
 
 	&:hover {
 		transform: scale(1.1);
-		color: var(--sec); // Added
+		color: var(--accent); // Added
 	}
 }
 
@@ -526,7 +563,8 @@ button#theme-toggle {
 	// filter: grayscale(100%);
 	// pointer-events: none;
 	position: relative;
-	opacity: 0.4;
+	// opacity: 0.4; // Replaced with semantic color
+	color: var(--text-disabled) !important;
 	z-index: auto;
 	transform: none; /* ensure no transform creates a context */
 }
@@ -546,11 +584,11 @@ button#theme-toggle {
 	right: 0%;
 	display: flex;
 	flex-direction: row;
-	background-color: var(--bg1);
+	background-color: var(--surface-2);
 	z-index: 10 !important;
 	border-radius: var(--border-rad);
 	padding: calc(var(--spacing-unit) / 2);
-	border: 1px solid var(--prim);
+	border: 1px solid var(--surface-border);
 	.ctx-button {
 		display: flex;
 		flex-direction: column;
@@ -560,7 +598,7 @@ button#theme-toggle {
 		cursor: pointer;
 		overflow: hidden;
 		gap: 0.2rem;
-		color: var(--sec);
+		color: var(--text-1);
 		.ctx-button-icon {
 			font-size: 3rem;
 			line-height: 2rem;
@@ -573,7 +611,7 @@ button#theme-toggle {
 		}
 		&:hover {
 			scale: 1.05;
-			filter: brightness(1);
+			filter: brightness(1.2); // Use brightness instead of scale
 		}
 		&:active {
 			scale: 0.95;
@@ -586,12 +624,12 @@ button#theme-toggle {
 /* width */
 ::-webkit-scrollbar {
 	width: 10px;
-	opacity: 0;
+	opacity: 0; // Kept for show/hide interaction
 	transition: opacity 1s linear;
 }
 ::-webkit-scrollbar:hover {
 	width: 10px;
-	opacity: 1;
+	opacity: 1; // Kept for show/hide interaction
 }
 
 /* Track */
@@ -601,18 +639,18 @@ button#theme-toggle {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-	background: var(--bg1);
+	background: var(--surface-2);
 	border-radius: var(--border-rad);
 	transition: opacity 1s linear;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--bg2);
+	background: var(--surface-border);
 }
 
-.scrollable {
-	overflow: auto;
-	scrollbar-gutter: stable both-edges; /* reserves space inside */
-	background-clip: padding-box;
-}
+// .scrollable {
+// 	overflow: auto;
+// 	scrollbar-gutter: stable both-edges; /* reserves space inside */
+// 	background-clip: padding-box;
+// }

@@ -81,3 +81,11 @@ export function saveKey(type, name, uuid, position, value, comment = null, disab
 		console.log(`Node ${uuid} dryrun:`, node);
 	}
 }
+
+export async function saveConfig() {
+	try {
+		await window.pywebview.api.save_window_config(JSON.stringify(window.config))
+	} catch (err) {
+		console.error("Failed to save config:", err)
+	}
+}

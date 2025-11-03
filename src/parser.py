@@ -106,7 +106,7 @@ class Node:
 					content.append(file_content)
 				return "\n".join(content)
 			if self.type == "GROUP" and self.name != "root":
-				group_content = []
+				group_content:list = []
 				comment = f" # {self.comment}" if self.comment else ""
 
 				group_content.append(

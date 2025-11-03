@@ -1,3 +1,4 @@
+# language=TOML
 default_config = """
 [config]
 first_run = true # DO NOT CHANGE

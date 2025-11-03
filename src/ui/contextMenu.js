@@ -1,4 +1,3 @@
-window.ctx_label_hidden = true
 export class ContextMenu {
 	constructor(items = []) {
 		this.el = document.createElement("div")
@@ -12,7 +11,7 @@ export class ContextMenu {
 			iconEl.textContent = icon
 			const labelEl = document.createElement("div")
 			labelEl.classList.add("ctx-button-label")
-			if (window.ctx_label_hidden) {
+			if (window.config["ctx_label_hidden"]) {
 				labelEl.classList.add("hidden")
 			}
 			labelEl.textContent = label

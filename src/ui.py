@@ -70,6 +70,7 @@ if __name__ == "__main__":
 	)
 
 	# print(webview.settings)
+#  
 	window.events.loaded += on_loaded
 
 	webview.start(
