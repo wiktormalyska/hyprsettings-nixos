@@ -8,7 +8,6 @@
 :root {
   --spacing-unit: 1rem;
   --border-rad: 5px;
-  --font-primary: "CommitMono Nerd Font Mono";
   --background-alpha: 0.9;
   /* Surfaces */
   --surface-0: #1e1e2e;
@@ -44,12 +43,6 @@
   --shadow: #6c7086;
 }
 
-@font-face {
-  font-family: "CommitMono Nerd Font";
-  src: url("fonts/CommitMonoNerdFont-Regular.otf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-}
 html {
   height: 100%;
   font-size: 62.5%;
@@ -59,7 +52,8 @@ html {
   font-family: var(--font-primary) !important;
   overflow: hidden;
   min-height: 0;
-  opacity: 1;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 }
 
 html,
@@ -85,7 +79,7 @@ body {
   max-width: 100%;
   min-height: 0;
   overflow: hidden;
-  transition: background-color 0.1s ease, color 0.05s ease;
+  transition: background-color 0.5s ease, color 0.05s ease;
   overflow-x: hidden;
 }
 
@@ -96,7 +90,7 @@ header {
   padding: var(--spacing-unit);
   border-bottom: 1px solid var(--surface-border);
   border-radius: 0;
-  transition: transform 0.1s ease;
+  transition: transform 0.5s ease;
   font-weight: 800;
 }
 header:hover {
@@ -169,7 +163,7 @@ footer > * {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: background-color 0.1s ease, color 0.05s ease, transform 0.1s ease;
+  transition: background-color 0.5s ease, color 0.05s ease, transform 0.5s ease;
   opacity: 0.9;
 }
 .sidebar-item:hover {
@@ -210,7 +204,7 @@ footer > * {
   margin-right: var(--spacing-unit);
   width: 2rem;
   height: 2rem;
-  transition: background-color 0.1s ease, color 0.05s ease;
+  transition: background-color 0.5s ease, color 0.05s ease;
 }
 .config-set#settings .setting-container input[type=checkbox]:active {
   transform: scale(1.5);
@@ -417,7 +411,7 @@ a {
   background: none;
   color: var(--accent);
   text-decoration: none;
-  transition: color 0.1s ease;
+  transition: color 0.5s ease;
 }
 a:hover {
   color: var(--accent-hover);
@@ -430,7 +424,7 @@ button#theme-toggle {
   color: var(--text-1);
   font-size: 2rem;
   margin-left: 2rem;
-  transition: transform 0.1s ease, color 0.1s ease;
+  transition: transform 0.5s ease, color 0.5s ease;
 }
 button#theme-toggle:hover {
   transform: scale(1.1);

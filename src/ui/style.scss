@@ -4,7 +4,7 @@
 
 // -- SCSS-only Vars (Internal) --
 $transition-speed-fast: 0.05s;
-$transition-speed-normal: 0.1s;
+$transition-speed-normal: 0.5s;
 $transition-main: background-color $transition-speed-normal ease,
 	color $transition-speed-fast ease;
 
@@ -48,7 +48,7 @@ $transition-main: background-color $transition-speed-normal ease,
 	// These are now themeable from JS!
 	--spacing-unit: 1rem;
 	--border-rad: 5px;
-	--font-primary: "CommitMono Nerd Font Mono";
+	// --font-primary: "Fira Code";
 	--background-alpha: 0.9;
 
 	/* Surfaces */
@@ -89,14 +89,6 @@ $transition-main: background-color $transition-speed-normal ease,
 	--shadow: #6c7086;
 }
 
-// --- Font ---
-@font-face {
-	font-family: "CommitMono Nerd Font";
-	src: url("fonts/CommitMonoNerdFont-Regular.otf") format("opentype");
-	font-weight: normal;
-	font-style: normal;
-}
-
 // --- Base & Resets ---
 
 html {
@@ -108,7 +100,9 @@ html {
 	font-family: var(--font-primary) !important;
 	overflow: hidden;
 	min-height: 0;
-	opacity: 1; //makes window see through a bit
+	// opacity: 1; //makes window see through a bit
+	opacity: 0;
+	transition: opacity 0.2s ease-in-out;
 }
 
 html,

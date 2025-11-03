@@ -16,7 +16,12 @@ async function setupData() {
     window.jsViewer = document.createElement("andypf-json-viewer")
     document.querySelector(".config-set#js_debug").appendChild(jsViewer)
     window.jsViewer.data = window.data
-    // console.log(windowConfig)
+    console.log(window.themeVariant)
+    if (window.themeVariant === "dark") {
+        window.jsViewer.setAttribute("theme", "papercolor-dark")
+    } else {
+        window.jsViewer.setAttribute("theme", "default-light")
+    }
     new configRenderer(window.data)
 }
 
@@ -30,9 +35,11 @@ async function load_config() {
     }
 }
 
+
 document.addEventListener("DOMContentLoaded", async () => {
     await load_config()
     await setupTheme()
+    document.documentElement.style.opacity = "1"; // fade in roo
     createDynamicTabs()
     await setupData()
     renderSettings()

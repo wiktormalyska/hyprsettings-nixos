@@ -4,7 +4,7 @@
 // TODO: WHAT TO DO WHEN COMMENTS ARE UNCOMMENTED?
 // IDEA: change value to key and parse
 import { ContextMenu } from "./contextMenu.js";
-import { bindFlags, modkeys, dispatchers, dispatcherParams, noneDispatchers } from "./hyprland-specific/binds.js"
+import { bindFlags, modkeys, dispatchers, dispatcherParams, noneDispatchers } from "../hyprland-specific/binds.js"
 import { debounce, saveKey, waitFor } from "./utils.js"
 // @ts-ignore
 
@@ -25,6 +25,10 @@ let tabids = [
     ["input", "input"],
     ["debug", "debug"]
 ];
+
+let keyStarts = [
+
+]
 export class configRenderer {
     constructor(json) {
         this.json = json
@@ -51,7 +55,7 @@ export class configRenderer {
             }
         }
 
-        else if (json["type"] === "COMMENT" && json["comment"].includes("## ")) {
+        else if (json["type"] === "COMMENT" && json["comment"].includes("### ")) {
             this.comment_stack.push(json)
             let comment = json["comment"].trim().replace(/^#+|#+$/g, "").trim();
             tabids.forEach(([key, val]) => {
@@ -65,6 +69,7 @@ export class configRenderer {
             });
 
         } // end of comment stacks
+        // TODO: Think of a way to make it so if the next comment after ## NAME
         //inline comments
         else if (json["type"] === "COMMENT") {
             let comment_item = new EditorItem_Comments(json, false)

@@ -1,11 +1,13 @@
-import webview
-from parser import ConfigParser, Node, makeUUID, print_hyprland
 from pathlib import Path
-import mimetypes
+import subprocess
+import webview
 from rich import traceback
+import mimetypes
+from parser import ConfigParser, Node, makeUUID, print_hyprland
 import tomlkit as toml
 from default_config import default_config
 import json
+
 
 traceback.install(show_locals=True)
 
@@ -58,6 +60,18 @@ class Api:
 			config_tosave = toml.dumps(self.window_config)
 			config_file.write(config_tosave)
 
+	def list_fonts(mono=True, nerd=True):
+		parts = []
+		if mono:
+			parts.append("fc-list :spacing=100 --format='%{family}\n'")
+		else:
+			parts.append("fc-list --format='%{family}\n'")
+		if nerd:
+			parts[-1] += " | grep -i 'Nerd Font'"
+		cmd = f"{' ; '.join(parts)} | sort -u"
+		result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+		return [f.strip() for f in result.stdout.splitlines() if f.strip()]
+
 
 if __name__ == "__main__":
 	api = Api()
@@ -70,7 +84,7 @@ if __name__ == "__main__":
 	)
 
 	# print(webview.settings)
-#  
+	#
 	window.events.loaded += on_loaded
 
 	webview.start(
