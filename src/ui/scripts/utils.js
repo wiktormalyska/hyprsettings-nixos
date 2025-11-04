@@ -78,7 +78,24 @@ export function saveKey(type, name, uuid, position, value, comment = null, disab
 		console.log(`Node ${uuid} saved:`, node);
 		window.pywebview.api.save_config(JSON.stringify(window.data));
 	} else {
-		console.log(`Node ${uuid} dryrun:`, node);
+		console.log(`Dryrun save ${uuid}:`, node);
+	}
+}
+
+export function deleteKey(uuid, position) {
+	console.log(`Deleting ${position} => with uuid ${uuid}`)
+	let root = window.data;
+	let path = position.split(":");
+	let parent = findParent(root, path);
+	let node = parent.children.find(node => node.uuid === uuid);
+	let nodeIndex = parent.children.findIndex(node => node.uuid === uuid);
+	if (!window.config.dryrun) {
+		console.log(`Node ${uuid} deleted:`, node);
+		parent.children.splice(nodeIndex, 1)
+		window.pywebview.api.save_config(JSON.stringify(window.data));
+		window.jsViewer.data = window.data;
+	} else {
+		console.log(`Dryrun delete ${uuid}:`, node);
 	}
 }
 

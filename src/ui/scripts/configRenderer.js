@@ -5,7 +5,7 @@
 
 import { ContextMenu } from "./contextMenu.js";
 import { bindFlags, modkeys, dispatchers, dispatcherParams, noneDispatchers } from "../hyprland-specific/binds.js"
-import { debounce, saveKey, waitFor } from "./utils.js"
+import { debounce, deleteKey, saveKey, waitFor } from "./utils.js"
 
 
 
@@ -226,7 +226,7 @@ class EditorItem_Generic {
             { label: "Add Above", icon: "󰅃", action: () => this.addAbove() },
             { label: "Add Below", icon: "󰅀", action: () => this.addAbove() },
             { label: "Toggle Disable", icon: "󰈉", action: () => this.disable() },
-            { label: "Delete Key", icon: "󰗩", action: () => this.addAbove() }
+            { label: "Delete Key", icon: "󰗩", action: () => this.delete() }
         ])
         this.el.appendChild(this.contextMenu.el)
 
@@ -275,6 +275,10 @@ class EditorItem_Generic {
     }
     addAbove() {
         console.log("Add above is not yet implemented")
+    }
+    delete() {
+        deleteKey(this.el.dataset.uuid, this.el.dataset.position)
+        this.el.remove()
     }
     disable() {
         this.el.dataset.disabled = this.el.dataset.disabled === "true" ? "false" : "true"
@@ -330,7 +334,10 @@ class EditorItem_Comments {
     addToParent(parent) {
         parent.appendChild(this.el)
     }
-
+    delete() {
+        deleteKey(this.el.dataset.uuid, this.el.dataset.position)
+        this.el.remove()
+    }
     save() {
         if (this.el.dataset.comment.startsWith("#")) {
             console.log("saving text inpuut")
@@ -389,7 +396,7 @@ class EditorItem_Binds {
             { label: "Add Above", icon: "󰅃", action: () => this.addAbove() },
             { label: "Add Below", icon: "󰅀", action: () => this.addAbove() },
             { label: "Toggle Disable", icon: "󰈉", action: () => this.disable() },
-            { label: "Delete Key", icon: "󰗩", action: () => this.addAbove() }
+            { label: "Delete Key", icon: "󰗩", action: () => this.delete() }
         ])
         this.el.appendChild(this.contextMenu.el)
         this.saveDebounced = debounce(() => this.save(), 100);
@@ -574,6 +581,10 @@ class EditorItem_Binds {
 
     addAbove() {
         console.log("Addabove yet to be implemented")
+    }
+    delete() {
+        deleteKey(this.el.dataset.uuid, this.el.dataset.position)
+        this.el.remove()
     }
 
     disable() {
