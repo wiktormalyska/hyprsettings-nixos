@@ -658,11 +658,17 @@ button {
 }
 
 span {
+	&.info {
+		color: var(--accent-success);
+	}
 	&.warning {
 		color: var(--accent-warning);
 	}
 	&.success {
 		color: var(--accent-success);
+	}
+	&.danger {
+		color: var(--accent-danger);
 	}
 }
 
@@ -717,7 +723,7 @@ span {
 	width: 100vw;
 	z-index: 10;
 	background-color: var(--surface-0) 50%;
-	backdrop-filter: blur(10px) brightness(0.8);
+	backdrop-filter: blur(10px) brightness(0.6);
 	justify-items: center;
 	justify-content: center;
 	align-items: center;
@@ -738,8 +744,8 @@ span {
 	p {
 		text-align: center;
 		display: inline-block;
-		padding-left: 10rem;
-		padding-right: 10rem;
+		padding-left: 8rem;
+		padding-right: 8rem;
 		margin-bottom: 0.55rem;
 	}
 

@@ -43,6 +43,8 @@ class Api:
 	def read_window_config(self):
 		window_config_path = Path.home() / ".config" / "hypr" / "hyprsettings.toml"
 		template = Path(thisfile_path / "default_config.toml")
+		temporary_font = self.list_fonts(mono=False, nerd=True)[1]
+
 		if not window_config_path.is_file():
 			print(f"Config file not found in {window_config_path}")
 			with open(
@@ -50,10 +52,13 @@ class Api:
 				"r",
 			) as default_config:
 				default_config_text = default_config.read()
+			self.window_config = toml.parse(default_config_text)
+			self.window_config["config"]["font"] = temporary_font if temporary_font else "Monospace"
+			print(self.window_config["config"]["font"])
 			with window_config_path.open("w") as config_file:
 				print(default_config_text)
 				config_file.write(default_config_text)
-			self.window_config = toml.parse(default_config_text)
+
 			return self.window_config
 		else:
 			with window_config_path.open("r", encoding="utf-8") as config_file:
@@ -64,7 +69,6 @@ class Api:
 	def save_window_config(self, json_fromjs):
 		print("Called save window config.")
 		config_from_json = json.loads(json_fromjs)
-		# print(config_from_json)
 		for key in config_from_json:
 			self.window_config["config"][key] = config_from_json[key]
 		window_config_path = Path.home() / ".config" / "hypr" / "hyprsettings.toml"
@@ -72,15 +76,13 @@ class Api:
 			config_tosave = toml.dumps(self.window_config)
 			config_file.write(config_tosave)
 
-	def list_fonts(mono=True, nerd=True):
-		parts = []
+	def list_fonts(self, mono=False, nerd=False):
+		cmd = "fc-list --format='%{family}\n'"
 		if mono:
-			parts.append("fc-list :spacing=100 --format='%{family}\n'")
-		else:
-			parts.append("fc-list --format='%{family}\n'")
+			cmd = "fc-list :spacing=100 --format='%{family}\n'"
 		if nerd:
-			parts[-1] += " | grep -i 'Nerd Font'"
-		cmd = f"{' ; '.join(parts)} | sort -u"
+			cmd += " | grep -i 'Nerd Font'"
+		cmd += " | sort -u"
 		result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
 		return [f.strip() for f in result.stdout.splitlines() if f.strip()]
 

@@ -541,11 +541,17 @@ button:hover {
   scale: 1.05;
 }
 
+span.info {
+  color: var(--accent-success);
+}
 span.warning {
   color: var(--accent-warning);
 }
 span.success {
   color: var(--accent-success);
+}
+span.danger {
+  color: var(--accent-danger);
 }
 
 /* width */
@@ -587,7 +593,7 @@ span.success {
   width: 100vw;
   z-index: 10;
   background-color: var(--surface-0) 50%;
-  backdrop-filter: blur(10px) brightness(0.8);
+  backdrop-filter: blur(10px) brightness(0.6);
   justify-items: center;
   justify-content: center;
   align-items: center;
@@ -607,8 +613,8 @@ span.success {
 #onboarding p {
   text-align: center;
   display: inline-block;
-  padding-left: 10rem;
-  padding-right: 10rem;
+  padding-left: 8rem;
+  padding-right: 8rem;
   margin-bottom: 0.55rem;
 }
 #onboarding button {

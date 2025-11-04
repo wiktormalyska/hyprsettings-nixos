@@ -4,15 +4,18 @@
 version = "0.1.5"
 user = "HyprSettings" #change this to yours
 
+# While running, config is on memory.
+# Changing while HyprSettings is open
+# will save what is on memory as a side effect.
 [config]
-first_run = true                   # do NOT change
-dryrun = false
-compact = true                      #makes binds hide their fields by default
+first_run = true                   # Changing this to true will show the onboarding.
+dryrun = false                     # Dryrun will not save changes.
+compact = true                     # Makes binds hide their fields by default.
 show_line_comments = true
 show_header_comments = false
 show_contextmenu_label = true
 current_theme = "Catppuccin Mocha"
-font = "CommitMono Nerd Font Propo"
+font = "Monospace"                 # Please use a nerd font.
 last_tab = "win-rules"
 
 [[theme]]
