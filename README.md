@@ -37,8 +37,6 @@ cd hyprsettings
 2. Install required system packages(make a venv if you want):
 
 ```bash
-sudo pacman -Syu python python-gobject gtk3 pywebview
-=======
 sudo pacman -Syu python python-gobject gtk3 python-pywebview python-tomlkit python-rich
 ```
 
