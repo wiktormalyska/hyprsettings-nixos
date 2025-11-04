@@ -725,16 +725,12 @@ span {
 	transition: opacity 1s ease;
 
 	* {
-		margin-bottom: var(--spacing-unit);
+		margin-bottom: 0;
 		text-shadow: 0 5px 20px 10px rgba(0, 0, 0, 1),
 			0 1px 5px rgba(0, 0, 0, 1);
 	}
 	h1,
 	h2,
-	h3,
-	h4,
-	h5,
-	h6,
 	a,
 	li {
 		margin-bottom: 0.3rem;
@@ -744,6 +740,7 @@ span {
 		display: inline-block;
 		padding-left: 10rem;
 		padding-right: 10rem;
+		margin-bottom: 0.55rem;
 	}
 
 	button {

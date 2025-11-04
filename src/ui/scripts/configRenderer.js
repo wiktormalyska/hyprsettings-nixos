@@ -27,16 +27,17 @@ let tabids = [
     ["input", "input"],
     ["debug", "debug"]
 ];
-let keyNameStarts=[
-    {"$": "globals"},
-    {"windowrulev2":"win-rules"},
-    {"bind":"keybinds"},
-    {"layerrule":"layerrules"},
-    {"workspace": "workspaces"},
-    {"env": "envars"},
-    {"permission": "persmissions"},
-    {"exec": "autostart"},
-]
+let keyNameStarts = [
+    ["$", "globals"],
+    ["windowrulev2", "win-rules"],
+    ["bind", "keybinds"],
+    ["layerrule", "layer-rules", ["workspace_wraparound"]],
+    ["workspace", "workspaces"],
+    ["env", "envars"],
+    ["permission", "persmissions"],
+    ["exec", "autostart"],
+    ["layerrule", "layerrules"],
+];
 export class configRenderer {
     constructor(json) {
         this.json = json
@@ -70,18 +71,29 @@ export class configRenderer {
         else if (json["type"] === "COMMENT" && json["comment"].includes("### ")) {
             this.comment_stack.push(json)
             let comment = json["comment"].trim().replace(/^#+|#+$/g, "").trim();
-            tabids.forEach(([key, val]) => {
+            // tabids.forEach(([key, val]) => {
+            //     if (comment.toLowerCase().includes(key)) {
+            //         this.current_container.pop()
+            //         this.current_container.push(document.querySelector(`.config-set#${val}`))
+            //         if (!document.querySelector(`.config-set#${val}`)) {
+            //             waitFor(() => this.current_container.push(document.querySelector(`.config-set#${val}`)))
+            //         }
+            //     }
+            // });
+
+            for (const [key, value] of tabids) {
                 if (comment.toLowerCase().includes(key)) {
                     this.current_container.pop()
-                    this.current_container.push(document.querySelector(`.config-set#${val}`))
-                    if (!document.querySelector(`.config-set#${val}`)) {
+                    this.current_container.push(document.querySelector(`.config-set#${value}`))
+                    if (!document.querySelector(`.config-set#${value}`)) {
                         waitFor(() => this.current_container.push(document.querySelector(`.config-set#${val}`)))
+                        break
                     }
                 }
-            });
+            }
 
         } // end of comment stacks
-        // TODO: Think of a way to make it so if the next comment after ## NAME
+        // TODO: Think of a way to make it so if the next comment after ## NAME is !startswith(#### end the group)
         //inline comments
         else if (json["type"] === "COMMENT") {
             let comment_item = new EditorItem_Comments(json, false)
@@ -116,7 +128,6 @@ export class configRenderer {
             // console.log(`Group ${json["name"]} under ${currentpath} is not yet handled to make a new div.`)
         }
         else if (json["position"] && json["type"] === "GROUPEND" && json["position"].split(":").length > 1) {
-            // console.log("Groupend: ", json["position"])
             this.current_container.pop()
         }
 
@@ -130,8 +141,22 @@ export class configRenderer {
                 keybind_item.addToParent(this.current_container.at(-1))
                 return
             }
+            //decision on where to put new Editor Item Keys
             let genericItem = new EditorItem_Generic(json, json["disabled"])
-            this.current_container.at(-1).appendChild(genericItem.el)
+            let tabToAddTo
+            for (const [key, value] of keyNameStarts) {
+                if (json.name.trim().startsWith(key)) {
+                    tabToAddTo = document.querySelector(`.config-set#${value}`)
+                    break
+                }
+            }
+            if (!tabToAddTo) {
+                tabToAddTo = this.current_container.at(-1)
+            }
+            if (json.name.startsWith("layerrule")) {
+                console.log(`a layerrule is added to ${tabToAddTo.id}`)
+            }
+            tabToAddTo.appendChild(genericItem.el)
         }
 
         //recursive children rendering

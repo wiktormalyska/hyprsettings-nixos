@@ -595,15 +595,11 @@ span.success {
   transition: opacity 1s ease;
 }
 #onboarding * {
-  margin-bottom: var(--spacing-unit);
+  margin-bottom: 0;
   text-shadow: 0 5px 20px 10px rgb(0, 0, 0), 0 1px 5px rgb(0, 0, 0);
 }
 #onboarding h1,
 #onboarding h2,
-#onboarding h3,
-#onboarding h4,
-#onboarding h5,
-#onboarding h6,
 #onboarding a,
 #onboarding li {
   margin-bottom: 0.3rem;
@@ -613,6 +609,7 @@ span.success {
   display: inline-block;
   padding-left: 10rem;
   padding-right: 10rem;
+  margin-bottom: 0.55rem;
 }
 #onboarding button {
   font-weight: bold;

@@ -4,9 +4,8 @@
 version = "0.1.5"
 user = "HyprSettings" #change this to yours
 
-
 [config]
-first_run = true                    # do NOT change
+first_run = true                   # do NOT change
 dryrun = false
 compact = true                      #makes binds hide their fields by default
 show_line_comments = true
@@ -14,6 +13,7 @@ show_header_comments = false
 show_contextmenu_label = true
 current_theme = "Catppuccin Mocha"
 font = "CommitMono Nerd Font Propo"
+last_tab = "win-rules"
 
 [[theme]]
 name = "Catppuccin Mocha"
