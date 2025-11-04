@@ -406,6 +406,9 @@ h1#config-set-title {
 .todo > span#value {
   color: var(--teal);
 }
+.todo:focus-visible, .todo:focus {
+  border: 0;
+}
 
 /* =================================
    5. Base Elements & Utilities

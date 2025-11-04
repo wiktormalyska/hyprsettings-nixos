@@ -511,6 +511,10 @@ h1#config-set-title {
 			color: var(--teal);
 		}
 	}
+	&:focus-visible,
+	&:focus {
+		border: 0;
+	}
 }
 
 /* =================================
