@@ -16,10 +16,10 @@ export const debounce = (fn, wait = 100) => {
 };
 
 export function hideAllContextMenus() {
-	console.log("hiding all ctx")
+	// console.log("hiding all ctx")
 	document.querySelectorAll(".context-menu").forEach((ctx) => {
 		ctx.style.opacity = 0
-		console.log("hid this ctx")
+		// console.log("hid this ctx")
 	})
 }
 /**

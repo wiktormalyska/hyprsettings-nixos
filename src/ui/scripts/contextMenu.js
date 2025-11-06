@@ -6,6 +6,8 @@
 // 	});
 //   });
 
+import { hideAllContextMenus } from "./utils.js";
+
 export class ContextMenu {
 	constructor(items = []) {
 		this.el = document.createElement("div")
@@ -73,6 +75,7 @@ export class ContextMenu {
 	}
 
 	show() {
+		hideAllContextMenus()
 		this.el.style.opacity = 1
 		this.el.classList.remove("hidden")
 

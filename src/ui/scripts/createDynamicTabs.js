@@ -150,6 +150,7 @@ export async function createDynamicTabs() {
 		if (selected_tab) {
 			selected_tab.click()
 		}
+		window.activeTab = id
 
 	}
 

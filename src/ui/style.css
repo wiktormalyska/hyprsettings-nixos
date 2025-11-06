@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /* -- Mixins --*/
 /* Single-line text overflow*/
 /* Sidebar tab active state (for :hover, :active, .selected)*/
@@ -286,13 +285,9 @@ h1#config-set-title {
   opacity: 0.8;
   background-color: var(--surface-0);
 }
-.editor-item:focus-within {
-  border-color: var(--accent);
+.editor-item:focus-within, .editor-item:focus-visible, .editor-item:focus {
+  border-color: 1px solid var(--accent-hover);
   opacity: 1;
-}
-.editor-item:focus-visible {
-  border: 1px dashed var(--accent-active);
-  outline: none;
 }
 .editor-item.compact {
   /* background-color: transparent !important;*/
@@ -302,6 +297,21 @@ h1#config-set-title {
 .editor-item.compact .comment-area {
   display: none;
   opacity: 0;
+}
+.editor-item.disabled .editor-item-preview {
+  padding-left: 6rem;
+}
+.editor-item.disabled .editor-item-preview::before {
+  height: 1.4 rem;
+  position: absolute;
+  padding-left: 0.5ch;
+  padding-right: 0.5ch;
+  z-index: 10000;
+  transform: translateY(2px) translateX(-100%);
+  border-radius: var(--border-rad);
+  color: var(--accent-warning);
+  font-size: 1.2rem;
+  content: "Disabled";
 }
 .editor-item .editor-item-preview {
   margin-bottom: 2px;
@@ -403,14 +413,12 @@ h1#config-set-title {
   padding: 0;
   border: 1px solid transparent;
   background-color: transparent;
-  opacity: 1;
   outline: none;
 }
 .editor-item:has(> .editor-item-comment) > .editor-item-comment {
   margin-bottom: 0;
   width: 100%;
   border: 0;
-  border: 1px solid transparent;
   border-radius: var(--border-rad);
   background-color: transparent;
   color: var(--text-4);
@@ -426,11 +434,6 @@ h1#config-set-title {
   /* Dimmer color for base state*/ /* line-height: 0.8rem;*/
   /* opacity: 0.5; // Removed, handled by text color*/
 }
-.editor-item:has(> .editor-item-comment) > .editor-item-comment::after {
-  margin-left: 2px;
-  content: " ⇢";
-  flex-shrink: 0;
-}
 .editor-item:has(> .editor-item-comment) > .editor-item-comment:hover {
   color: var(--text-1);
   font-weight: unset;
@@ -441,6 +444,14 @@ h1#config-set-title {
   font-weight: unset;
   outline: none;
   /* border: 1px dashed var(--accent-active);*/ /* Brighten on focus*/
+}
+.editor-item:has(> .editor-item-comment):focus-within, .editor-item:has(> .editor-item-comment):focus-visible, .editor-item:has(> .editor-item-comment):focus {
+  border: 1px solid transparent;
+  border-bottom: 1px solid var(--accent-hover) !important;
+  opacity: 1 !important;
+}
+.editor-item:has(> .editor-item-comment):focus-within > *, .editor-item:has(> .editor-item-comment):focus-visible > *, .editor-item:has(> .editor-item-comment):focus > * {
+  color: var(--text-1);
 }
 
 .editor-item-generic {
@@ -551,28 +562,6 @@ a {
 }
 a:hover {
   text-decoration: underline;
-}
-
-.disabled {
-  /* filter: grayscale(100%);*/
-  /* pointer-events: none;*/
-  position: relative;
-  z-index: auto;
-  transform: none;
-  /* opacity: 0.4; // Replaced with semantic color*/
-  /* color: var(--text-disabled) !important;*/ /* ensure no transform creates a context */
-}
-
-.disabled::before {
-  height: 1.4 rem;
-  margin-right: 1ch;
-  padding: 0.5ch;
-  border-radius: var(--border-rad);
-  background-color: var(--accent-warning);
-  color: var(--text-contrast);
-  font-size: 1rem;
-  font-weight: bold;
-  content: "Disabled";
 }
 
 .settings-hidden {

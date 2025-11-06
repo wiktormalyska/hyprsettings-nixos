@@ -50,7 +50,7 @@ export class configRenderer {
             if (this.comment_stack.length === 3) {
                 for (let i = 0; i < this.comment_stack.length; i++) {
                     let comment_item = new EditorItem_Comments(this.comment_stack[i])
-                    // console.log(comment_item)
+                    //
                     comment_item.el.classList.add("block-comment")
                     if (!window.config["show_header_comments"]) {
                         comment_item.el.classList.add("settings-hidden")
@@ -93,11 +93,12 @@ export class configRenderer {
         // } //fugly
 
         else if (json["type"] === "GROUP") {
-            // console.log(`json group: ${json["name"]}`)
+            //
             if (json["position"] && json["position"].split(":").length > 1) {
-                // console.log("Groupstart: ", json["position"])
+                //
                 let group_el = document.createElement("div")
                 group_el.classList.add("config-group")
+                group_el.setAttribute("tabindex", 0)
                 group_el.classList.add("editor-item")
                 group_el.dataset.name = json["name"]
                 group_el.dataset.uuid = json["uuid"]
@@ -137,7 +138,6 @@ export class configRenderer {
                 tabToAddTo = this.current_container.at(-1)
             }
             if (json.name.startsWith("layerrule")) {
-                console.log(`a layerrule is added to ${tabToAddTo.id}`)
             }
             tabToAddTo.appendChild(genericItem.el)
         }
@@ -147,7 +147,7 @@ export class configRenderer {
             if (key === "children") {
                 for (let child of json[key]) {
                     this.parse(child)
-                    // console.log(child)
+                    //
                 }
             }
         }
@@ -218,18 +218,17 @@ class EditorItem_Generic {
         this.el.appendChild(this.contextMenu.el)
 
         this.el.addEventListener("click", (e) => {
-            hideAllContextMenus()
+
             this.el.classList.remove("compact")
             this.contextMenu.show()
         })
         this.el.addEventListener("contextmenu", (e) => {
             e.preventDefault()
-            hideAllContextMenus()
+
             this.contextMenu.show()
         })
         this.el.addEventListener("dblclick", (e) => {
-            console.log("Double clicked!")
-            hideAllContextMenus()
+
             this.el.classList.toggle("compact")
             this.contextMenu.hide()
         })
@@ -261,7 +260,6 @@ class EditorItem_Generic {
         parent.appendChild(this.el)
     }
     addAbove() {
-        console.log("Add above is not yet implemented")
     }
     delete() {
         deleteKey(this.el.dataset.uuid, this.el.dataset.position)
@@ -298,6 +296,7 @@ class EditorItem_Comments {
         this.el.dataset.position = position
         this.el.title = position.replace("root:", "").replaceAll(":", "   ")
         this.el.classList.add("editor-item")
+        this.el.setAttribute("tabindex", 0)
         if (hidden) {
             this.el.classList.add("settings-hidden")
         }
@@ -315,30 +314,44 @@ class EditorItem_Comments {
         ])
         this.el.appendChild(this.contextMenu.el)
         this.el.addEventListener("click", (e) => {
-            // this.el.classList.remove("compact")
-            hideAllContextMenus()
             this.contextMenu.show()
         })
         this.el.addEventListener("contextmenu", (e) => {
-            // this.el.classList.remove("compact")
             e.preventDefault()
-            hideAllContextMenus()
+
             this.contextMenu.show()
-            console.log(this.contextMenu.show())
         })
         this.el.addEventListener("dblclick", (e) => {
-            console.log("Double clicked!")
             this.contextMenu.hide()
         })
         this.el.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
                 // this.el.classList.toggle("compact")
-                this.contextMenu.el.classList.toggle("hidden")
+                e.preventDefault()
+                // this.textarea.focus()
+                setTimeout(() => this.textarea.focus(), 0);
+                this.contextMenu.show()
+
             }
+            if (e.key === "Escape") {
+                e.preventDefault()
+                const editorItem = this.textarea.closest(".editor-item")
+                editorItem.focus()
+                this.textarea.blur()
+            }
+            if (e.key === "ArrowDown") {
+                // this.el.classList.toggle("compact")
+                e.preventDefault()
+                // this.textarea.focus()
+                this.contextMenu.show()
+
+            }
+        })
+        this.textarea.addEventListener("keydown", (e)=>{
+
         })
         this.el.addEventListener("focus", (e) => {
             this.contextMenu.show()
-            hideAllContextMenus()
         })
 
         this.initial_load = false
@@ -360,7 +373,6 @@ class EditorItem_Comments {
     }
     save() {
         if (this.el.dataset.comment.startsWith("#")) {
-            console.log("saving text inpuut")
             let type = "COMMENT"
             let name = this.el.dataset.name
             let uuid = this.el.dataset.uuid
@@ -392,7 +404,7 @@ class EditorItem_Binds {
         let comment = json["comment"]
         let position = json["position"]
         if (!name.trim().startsWith("bind")) {
-            return console.warn(`Given json object is not sutable for this editor item:${name}=${value}`)
+            return
         }
         const template = document.getElementById("keybind-template")
         this.el = template.content.firstElementChild.cloneNode(true)
@@ -484,7 +496,7 @@ class EditorItem_Binds {
         let key_el = this.el.querySelector(".keypress")
         key_el.textContent = values[1].trim()
         key_el.addEventListener("input", () => {
-            // console.log("textarea edited")
+            //
             if (!this.initial_load) {
                 this.update()
             }
@@ -512,14 +524,13 @@ class EditorItem_Binds {
             this.dispatcherTS.addItem(dispatcher_additem)
         } else {
             this.dispatcherTS.createItem(dispatcher_additem)
-            console.log(`No dispatcher defined: ${dispatcher_additem}`)
         }
 
         let params_additem = values[3] ? values[3].trim() : null
         // this.paramTS.createItem(params_additem)
         paramSelect_el.value = params_additem
         paramSelect_el.addEventListener("input", () => {
-            // console.log("textarea edited")
+            //
             if (!this.initial_load) {
                 this.update()
             }
@@ -546,7 +557,6 @@ class EditorItem_Binds {
             this.contextMenu.show()
         })
         this.el.addEventListener("dblclick", (e) => {
-            console.log("Double clicked!")
             // let target = e.target()
             this.el.classList.toggle("compact")
             this.contextMenu.hide()
@@ -600,7 +610,6 @@ class EditorItem_Binds {
     }
 
     addAbove() {
-        console.log("Addabove yet to be implemented")
     }
     delete() {
         deleteKey(this.el.dataset.uuid, this.el.dataset.position)
@@ -639,7 +648,6 @@ class EditorItem_Binds {
     }
 
     save() {
-        console.log(`Element with uuid ${this.el.dataset.uuid} changed to ${this.preview} with comment ${this.el.dataset.comment}`)
         let name = this.el.dataset.name
         let uuid = this.el.dataset.uuid
         let position = this.el.dataset.position

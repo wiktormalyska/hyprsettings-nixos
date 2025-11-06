@@ -343,15 +343,12 @@ h1#config-set-title {
 	opacity: 0.8;
 	background-color: var(--surface-0);
 
-	&:focus-within {
-		border-color: var(--accent);
+	&:focus-within,
+	&:focus-visible,
+	&:focus {
+		border-color: 1px solid var(--accent-hover);
 		opacity: 1;
 	}
-	&:focus-visible {
-		border: 1px dashed var(--accent-active);
-		outline: none;
-	}
-
 	&.compact {
 		/* background-color: transparent !important;*/
 		.keybind-editor,
@@ -361,7 +358,25 @@ h1#config-set-title {
 			opacity: 0;
 		}
 	}
-
+	&.disabled {
+		.editor-item-preview {
+			padding-left: 6rem;
+		}
+		.editor-item-preview::before {
+			height: 1.4 rem;
+			position: absolute;
+			padding-left: 0.5ch;
+			padding-right: 0.5ch;
+			z-index: 10000;
+			transform: translateY(2px) translateX(-100%);
+			border-radius: var(--border-rad);
+			// background-color: var(--accent-warning);
+			color: var(--accent-warning);
+			font-size: 1.2rem;
+			// font-weight: bold;
+			content: "Disabled";
+		}
+	}
 	.editor-item-preview {
 		margin-bottom: 2px;
 		font-size: 1.4rem;
@@ -469,19 +484,20 @@ h1#config-set-title {
 }
 
 /* --- Line Comment Item (Specific) ---*/
-.editor-item:has(> .editor-item-comment) {
+.editor-item:has(>.editor-item-comment) {
 	margin: 0;
 	padding: 0;
 	border: 1px solid transparent;
+	// border: 1px solid red;
 	background-color: transparent;
-	opacity: 1;
+	// opacity: 1;
 	outline: none;
 
 	> .editor-item-comment {
 		margin-bottom: 0;
 		width: 100%;
 		border: 0;
-		border: 1px solid transparent;
+		// border: 1px solid transparent;
 		border-radius: var(--border-rad);
 		background-color: transparent;
 		color: var(--text-4);
@@ -493,12 +509,6 @@ h1#config-set-title {
 		overflow: hidden;
 		@include text-ellipsis; /* Dimmer color for base state*/ /* line-height: 0.8rem;*/
 		/* opacity: 0.5; // Removed, handled by text color*/
-
-		&::after {
-			margin-left: 2px;
-			content: " ⇢";
-			flex-shrink: 0;
-		}
 		&:hover {
 			color: var(--text-1);
 			font-weight: unset;
@@ -510,6 +520,17 @@ h1#config-set-title {
 			font-weight: unset;
 			outline: none;
 			/* border: 1px dashed var(--accent-active);*/ /* Brighten on focus*/
+		}
+	}
+	&:focus-within,
+	&:focus-visible,
+	&:focus {
+		// border-color: var(--accent);
+		border: 1px solid transparent;
+		border-bottom: 1px solid var(--accent-hover) !important;
+		opacity: 1 !important;
+		> * {
+			color: var(--text-1);
 		}
 	}
 }
@@ -647,30 +668,29 @@ a {
 	}
 }
 
-.disabled {
-	/* filter: grayscale(100%);*/
-	/* pointer-events: none;*/
-
-	position: relative;
-	z-index: auto;
-	transform: none;
-	/* opacity: 0.4; // Replaced with semantic color*/
-	/* color: var(--text-disabled) !important;*/ /* ensure no transform creates a context */
-}
-.disabled::before {
-	height: 1.4 rem;
-	margin-right: 1ch;
-	padding: 0.5ch;
-
-	border-radius: var(--border-rad);
-
-	background-color: var(--accent-warning);
-
-	color: var(--text-contrast);
-	font-size: 1rem;
-	font-weight: bold;
-	content: "Disabled";
-}
+// .disabled {
+// 	position: relative;
+// 	transform: none;
+// 	overflow: visible;
+// }
+// .disabled::before {
+// 	height: 1.4 rem;
+// 	// margin-right: 1ch;
+// 	padding-left: 0.5ch;
+// 	padding-right: 0.5ch;
+// 	// aspect-ratio: 1;
+// 	z-index: 10000;
+// 	position: absolute;
+// 	right: 0;
+// 	top: 0;
+// 	transform: translateX(-1ch) translateY(1ch);
+// 	border-radius: var(--border-rad);
+// 	// background-color: var(--accent-warning);
+// 	color: var(--accent-warning);
+// 	font-size: 2rem;
+// 	font-weight: bold;
+// 	content: "";
+// }
 
 .settings-hidden {
 	display: none !important;
