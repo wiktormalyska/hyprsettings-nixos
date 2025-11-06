@@ -135,6 +135,7 @@ class ConfigTabs {
 		const configSetTitle = document.querySelector("#config-set-title");
 		configSetTitle.textContent = sidebarItemTitle;
 		window.config["last_tab"] = id
+		window.currentView = "tabs"
 		saveConfig()
 	}
 }

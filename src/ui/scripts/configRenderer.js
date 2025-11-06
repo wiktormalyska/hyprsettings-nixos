@@ -40,6 +40,13 @@ export class configRenderer {
         this.comment_stack = []
         this.group_stack = []
         this.parse(this.json)
+        document.querySelectorAll(".editor-item").forEach((element) => {
+            element.addEventListener("click", () => {
+                window.currentView = "main";
+                window.mainFocus[window.activeTab] = element.dataset.uuid
+            })
+
+        })
 
     }
 
@@ -151,6 +158,9 @@ export class configRenderer {
                 }
             }
         }
+
+
+
     }
 }
 
@@ -185,11 +195,10 @@ class EditorItem_Generic {
         let value = json["value"]
         let comment = json["comment"] ? `${json["comment"]}` : ""
         let position = json["position"]
+        this.saveDebounced = debounce(() => this.save(), 250);
 
         const template = document.getElementById("generic-template")
         this.el = template.content.firstElementChild.cloneNode(true)
-        let preview_el = this.el.querySelector(".editor-item-preview")
-        preview_el.innerHTML = `<span id="key">${json["name"]} </span> <span id="value">${json["value"]}</span>&nbsp;${comment}`
         this.el.classList.add("editor-item")
         this.el.classList.add("editor-item-generic")
         if (window.config.compact) {
@@ -206,7 +215,24 @@ class EditorItem_Generic {
         if (disabled === true) {
             this.el.classList.add("disabled")
         }
-        this.saveDebounced = debounce(() => this.save(), 250);
+
+        this.preview_el = this.el.querySelector(".editor-item-preview")
+        this.preview_el.innerHTML = `<span id="key">${json["name"]} </span> <span id="value">${json["value"]}</span>&nbsp;${comment}`
+
+        this.genericEditor_el = this.el.querySelector(".generic-editor")
+        this.genericEditor_el.innerHTML = ""
+        this.keyEditor = document.createElement("textarea")
+        this.keyEditor.rows = 1
+        this.keyEditor.id = "generic-key"
+        this.valueEditor = document.createElement("textarea")
+        this.valueEditor.rows = 1
+        this.valueEditor.id = "generic-value"
+        // this.genericEditor_el.appendChild(this.keyEditor)
+        this.genericEditor_el.appendChild(this.valueEditor)
+        this.keyEditor.value = name
+        this.valueEditor.value = value
+
+
 
         this.contextMenu = new ContextMenu([
             { label: "Add Above", icon: "󰅃", action: () => this.addAbove() },
@@ -325,30 +351,43 @@ class EditorItem_Comments {
             this.contextMenu.hide()
         })
         this.el.addEventListener("keydown", (e) => {
+            let editing = false
             if (e.key === "Enter") {
-                // this.el.classList.toggle("compact")
-                e.preventDefault()
-                // this.textarea.focus()
-                setTimeout(() => this.textarea.focus(), 0);
-                this.contextMenu.show()
-
+                if (!editing) {
+                    e.preventDefault()
+                    setTimeout(() => this.textarea.focus(), 0);
+                    editing = true
+                    this.contextMenu.show()
+                } else {
+                    this.textarea.blur()
+                    this.el.focus()
+                    editing = !editing
+                }
             }
             if (e.key === "Escape") {
                 e.preventDefault()
                 const editorItem = this.textarea.closest(".editor-item")
                 editorItem.focus()
+                editing = false
                 this.textarea.blur()
             }
             if (e.key === "ArrowDown") {
                 // this.el.classList.toggle("compact")
                 e.preventDefault()
-                // this.textarea.focus()
+                // this.textarea.blur()
                 this.contextMenu.show()
 
             }
         })
-        this.textarea.addEventListener("keydown", (e)=>{
-
+        this.textarea.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                this.el.focus()
+                // this.textarea.blur()
+            }
+            if (e.key === "ArrowDown") {
+                e.preventDefault()
+                this.el.focus()
+            }
         })
         this.el.addEventListener("focus", (e) => {
             this.contextMenu.show()
@@ -564,15 +603,23 @@ class EditorItem_Binds {
         this.el.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
                 this.el.classList.toggle("compact")
-                // this.contextMenu.el.classList.toggle("hidden")
+                this.contextMenu.show()
+            }
+            if (e.key === "Delete") {
+                this.el.contextMenu.el.children.forEach(element => {
+                    let label_el = element.querySelector(".ctx-button-label")
+                    if (label_el.toLowerCase().contains("Delete")) {
+                        element.click()
+                    }
+                });
+
             }
         })
         this.el.addEventListener("focus", (e) => {
             this.contextMenu.show()
         })
         this.el.addEventListener("blur", () => {
-            this.contextMenu.hide()
-            // this.el.classList.add("compact")
+            // this.contextMenu.hide()
         })
         this.update()
         this.initial_load = false

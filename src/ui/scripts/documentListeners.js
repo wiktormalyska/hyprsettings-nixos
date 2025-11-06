@@ -44,9 +44,14 @@ hotkeys('*', (event) => {
 	if (event.key === "ArrowRight" && window.currentView === "tabs") {
 
 		const currentSet = document.querySelector(`.config-set#${window.activeTab}`);
-		if (!currentSet) return;
+		if (!currentSet) {
+			console.log(`Config set ${window.activeTab} doesnt exist.`);
+			return
+		} else {
+			console.log(`Config set ${window.activeTab} exists.`);
+		}
 
-		if (window.mainFocus[window.activeTab]) {
+		if (window.mainFocus[window.activeTab] && currentSet.querySelector(`[data-uuid='${window.mainFocus[window.activeTab]}']`)) {
 			const prevFocus = currentSet.querySelector(`[data-uuid='${window.mainFocus[window.activeTab]}']`);
 			if (prevFocus) {
 				window.currentFocus = prevFocus
@@ -61,9 +66,10 @@ hotkeys('*', (event) => {
 			if (firstChild) {
 				window.currentFocus = firstChild
 				firstChild.focus({ preventScroll: true });
-				window.mainFocus[window.activeTab] = firstChild.dataset.uuid || firstChild.id || 0;
+				window.mainFocus[window.activeTab] = firstChild.dataset.uuid || 0;
 				window.currentView = "main";
 			}
+			console.log(firstChild)
 
 		}
 	}

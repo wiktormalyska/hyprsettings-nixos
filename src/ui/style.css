@@ -9,7 +9,7 @@
   --spacing-unit: 1rem;
   --border-rad: 5px;
   --background-alpha: 0.9;
-  --animation-margin: 2rem ;
+  --animation-margin: 2rem;
   --surface-0: #1e1e2e;
   --surface-1: #181825;
   --surface-2: #11111b;
@@ -208,6 +208,8 @@ footer > * {
   overflow: hidden;
   text-overflow: ellipsis;
   /* For vertical alignment*/
+  outline: none !important;
+  transition: background-color 0.1s ease-in-out;
   /* border-radius: var(--border-rad);*/
   /* @include scroll-on-hover(7s);*/
 }
@@ -216,6 +218,7 @@ footer > * {
   color: var(--text-contrast);
   font-weight: 600;
   /* Use mixin*/
+  background-color: var(--accent-active);
   /* border: 1px solid var(--accent);*/
 }
 .sidebar-item:active {
@@ -515,6 +518,12 @@ h1#config-set-title {
 .editor-item-generic.disabled {
   /* text-decoration: line-through;*/
 }
+.editor-item-generic .generic-editor > * {
+  flex: 1 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .editor-item-generic > *#key {
   height: 100%;
   padding-left: 0.5rem;
@@ -531,6 +540,7 @@ h1#config-set-title {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .config-group {
   background-color: var(--surface-1);
   background-blend-mode: multiply;

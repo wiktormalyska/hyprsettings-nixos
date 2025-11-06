@@ -22,6 +22,8 @@ class CheckBoxItem {
 	constructor(id, label, config_key, default_value = true) {
 		this.settingContainer = document.createElement("div")
 		this.settingContainer.classList.add("setting-container")
+		this.settingContainer.classList.add("editor-item")
+		this.settingContainer.setAttribute("tabindex", 0)
 		this.checkbox = document.createElement("input")
 		this.checkbox.id = id
 		this.checkbox.setAttribute("type", "checkbox")
@@ -31,7 +33,18 @@ class CheckBoxItem {
 		this.label.textContent = label
 		this.settingContainer.appendChild(this.checkbox)
 		this.settingContainer.appendChild(this.label)
+		this.addListeners()
 		settingsEl.appendChild(this.settingContainer)
+	}
+	addListeners() {
+		this.settingContainer.addEventListener("keydown", (e) => {
+			if (e.key === "Space") {
+				this.checkbox.click()
+			}
+		})
+		this.settingContainer.addEventListener("click", () => {
+			window.currentView = "main"
+		})
 	}
 
 	return() {
