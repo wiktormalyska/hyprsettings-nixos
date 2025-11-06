@@ -8,17 +8,17 @@ user = "HyprSettings" #change this to yours
 # Changing while HyprSettings is open
 # will save what is on memory as a side effect.
 [config]
-first_run = false                  # Changing this to true will show the onboarding.
+first_run = true                  # Changing this to true will show the onboarding.
 dryrun = false                     # Dryrun will not save changes.
 compact = true                     # Makes binds hide their fields by default.
-show_line_comments = false
+show_line_comments = true
 show_header_comments = false
 show_contextmenu_label = true
 show_sidebar_icons = false
-current_theme = "Embark"
+current_theme = "Catppuccin Mocha"
 font = "CommitMono Nerd Font Mono" # Please use a nerd font.
-last_tab = "monitor"
-transparency = 0.8
+last_tab = "general"
+transparency = 1 				#0-1, zero is transparent(stupid, ikr)
 
 
 [[theme]]
