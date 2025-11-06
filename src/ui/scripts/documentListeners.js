@@ -16,17 +16,20 @@ document.addEventListener("mousedown", e => {
 
 
 const pressed = new Set();
-
-
 hotkeys('*', { keydown: true, keyup: true }, (event) => {
 	if (event.type === 'keydown') pressed.add(event.key);
-	if (event.type === 'keyup') pressed.delete(event.key);
-
+	if (event.type === 'keyup') {
+		setTimeout(()=>{
+			pressed.delete(event.key);
+		},200)
+		
+	}
 	document.querySelector("#keys-display").textContent =
 		Array.from(pressed).join(" + ");
 	setTimeout(() => {
 		pressed.clear()
-	}, 1000)
+		document.querySelector("#keys-display").textContent =""
+	}, 1500)
 });
 
 window.currentView = "tabs"; // default active tab index

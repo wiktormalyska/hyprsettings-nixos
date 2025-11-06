@@ -285,9 +285,33 @@ h1#config-set-title {
   opacity: 0.8;
   background-color: var(--surface-0);
 }
-.editor-item:focus-within, .editor-item:focus-visible, .editor-item:focus {
-  border-color: 1px solid var(--accent-hover);
+.editor-item:focus-visible, .editor-item:focus {
+  border: 1px solid var(--accent-hover);
   opacity: 1;
+  margin-left: 1.5rem !important;
+}
+.editor-item:focus-visible::after, .editor-item:focus::after {
+  content: "\e602";
+  position: absolute;
+  left: -1rem;
+  top: 1rem;
+  transform: translateY(-50%);
+  color: var(--accent-success);
+  font-weight: bold;
+}
+.editor-item:focus-within:not(:focus) {
+  border: 1px solid var(--accent-hover);
+  opacity: 1;
+  margin-left: 1.5rem !important;
+}
+.editor-item:focus-within:not(:focus)::after {
+  content: "\f040";
+  position: absolute;
+  left: -1rem;
+  top: 1rem;
+  transform: translateY(-50%);
+  color: var(--accent-success);
+  font-weight: bold;
 }
 .editor-item.compact {
   /* background-color: transparent !important;*/

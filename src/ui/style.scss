@@ -343,11 +343,34 @@ h1#config-set-title {
 	opacity: 0.8;
 	background-color: var(--surface-0);
 
-	&:focus-within,
 	&:focus-visible,
 	&:focus {
-		border-color: 1px solid var(--accent-hover);
+		border: 1px solid var(--accent-hover);
 		opacity: 1;
+		margin-left: 1.5rem !important;
+		&::after {
+			content: "";
+			position: absolute;
+			left: -1rem; // adjust to fit your layout
+			top: 1rem;
+			transform: translateY(-50%);
+			color: var(--accent-success);
+			font-weight: bold;
+		}
+	}
+	&:focus-within:not(:focus){
+		border: 1px solid var(--accent-hover);
+		opacity: 1;
+		margin-left: 1.5rem !important;
+		&::after {
+			content: "";
+			position: absolute;
+			left: -1rem; // adjust to fit your layout
+			top: 1rem;
+			transform: translateY(-50%);
+			color: var(--accent-success);
+			font-weight: bold;
+		}
 	}
 	&.compact {
 		/* background-color: transparent !important;*/
@@ -484,7 +507,7 @@ h1#config-set-title {
 }
 
 /* --- Line Comment Item (Specific) ---*/
-.editor-item:has(>.editor-item-comment) {
+.editor-item:has(> .editor-item-comment) {
 	margin: 0;
 	padding: 0;
 	border: 1px solid transparent;
