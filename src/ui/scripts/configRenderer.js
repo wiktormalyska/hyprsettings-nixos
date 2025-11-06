@@ -52,7 +52,7 @@ export class configRenderer {
 
     async parse(json) {
         //Comment Stacking for three line label comments from default hyprland.conf
-        if (json["type"] === "COMMENT" && json["comment"].startsWith("####")) {
+        if (json["type"] === "COMMENT" && json["comment"].startsWith("####") && (1 < this.comment_stack.length < 3)) {
             this.comment_stack.push(json)
             if (this.comment_stack.length === 3) {
                 for (let i = 0; i < this.comment_stack.length; i++) {
@@ -69,7 +69,7 @@ export class configRenderer {
             }
         }
 
-        else if (json["type"] === "COMMENT" && json["comment"].includes("### ")) {
+        else if (json["type"] === "COMMENT" && json["comment"].includes("### ") && (this.comment_stack.length == 1)) {
             this.comment_stack.push(json)
             let comment = json["comment"].trim().replace(/^#+|#+$/g, "").trim();
 
@@ -88,6 +88,19 @@ export class configRenderer {
         // TODO: Think of a way to make it so if the next comment after ## NAME is !startswith(#### end the group)
         //inline comments
         else if (json["type"] === "COMMENT") {
+            if (this.comment_stack.length > 0) { //catch for when there is a comment stack that didnt end
+                for (let i = 0; i < this.comment_stack.length; i++) {
+                    let comment_item = new EditorItem_Comments(this.comment_stack[i])
+                    //
+                    comment_item.el.classList.add("block-comment")
+                    if (!window.config["show_header_comments"]) {
+                        comment_item.el.classList.add("settings-hidden")
+                    }
+
+                    comment_item.addToParent(this.current_container.at(-1))
+                }
+                this.comment_stack = []
+            }
             let comment_item = new EditorItem_Comments(json, false)
             comment_item.addToParent(this.current_container.at(-1))
         }
@@ -114,6 +127,12 @@ export class configRenderer {
                 if (json["comment"]) {
                     group_el.dataset.comment = json["comment"]
                 }
+                group_el.addEventListener("keydown", (e) => {
+                    if (e.key == "Enter") {
+                        group_el.querySelector(".editor-item").focus()
+                        console.log("Group is entered")
+                    }
+                })
                 this.current_container.at(-1).appendChild(group_el)
                 this.current_container.push(group_el)
             }

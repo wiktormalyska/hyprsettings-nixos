@@ -20,8 +20,8 @@ console = Console()
 NodeType = Literal["KEY", "GROUP", "COMMENT", "BLANK", "FILE", "GROUPEND"]
 
 
-def makeUUID(count: int):
-	return str(uuid.uuid4()).replace("-", "")[:count]
+def makeUUID(length: int):
+	return str(uuid.uuid4()).replace("-", "")[:length]
 
 
 class Node:
@@ -35,9 +35,7 @@ class Node:
 		disabled=False,
 	):
 		allowed_types = get_args(NodeType)
-		assert type_ in allowed_types, (
-			f"Invalid node type {type_}. Must be one of {allowed_types}"
-		)
+		assert type_ in allowed_types, f"Invalid node type {type_}. Must be one of {allowed_types}"
 		self.name = name
 		self.type = type_
 		self.value = value
@@ -106,26 +104,20 @@ class Node:
 					content.append(file_content)
 				return "\n".join(content)
 			if self.type == "GROUP" and self.name != "root":
-				group_content:list = []
+				group_content: list = []
 				comment = f" # {self.comment}" if self.comment else ""
 
-				group_content.append(
-					f"{indent * indent_level}{self.name}" + " {" + comment
-				)
+				group_content.append(f"{indent * indent_level}{self.name}" + " {" + comment)
 				indent_level += 1
 				groupeend_comment = None
 				for child in self.children:
 					if child.type == "GROUPEND":
-						groupeend_comment = (
-							f"# {child.comment}" if child.comment else ""
-						)
+						groupeend_comment = f"# {child.comment}" if child.comment else ""
 						continue
 					content = child.to_hyprland(indent_level)
 					group_content.append(content)
 				indent_level -= 1
-				group_content.append(
-					f"{indent * indent_level}" + "}" + f" {groupeend_comment}"
-				)
+				group_content.append(f"{indent * indent_level}" + "}" + f" {groupeend_comment}")
 
 				return "\n".join(group_content)
 		else:
@@ -209,17 +201,11 @@ class ConfigParser:
 					)
 					self.stack[-1].addChildren(blank_line)
 					continue
-				if (
-					colon_index != -1
-					and equal_index != -1
-					and colon_index < equal_index
-				):
+				if colon_index != -1 and equal_index != -1 and colon_index < equal_index:
 					# TODO:IMPLEMENT COLON GROUPS
 					# print(f"Line {line_content} has ':' before '='")
 					pass
-				elif re.match(
-					r"^#\s*disabled\b", line_content.lstrip(), re.IGNORECASE
-				):
+				elif re.match(r"^#\s*disabled\b", line_content.lstrip(), re.IGNORECASE):
 					# print(f"Line Content {line_content} is disabled")
 					line_content = re.sub(
 						r"^\s*#\s*disabled\b\s*",
@@ -247,11 +233,7 @@ class ConfigParser:
 				elif line_content.strip().startswith(
 					"#"
 				):  ##Disabled is checked first before this to ensure it doesnt make a comment
-					new_comment = (
-						f"#{comment}"
-						if line_content.strip().startswith("##")
-						else f"# {comment}"
-					)
+					new_comment = f"#{comment}" if line_content.strip().startswith("##") else f"# {comment}"
 					# print(new_comment)
 					comment_node = Node(
 						"comment",
@@ -302,15 +284,11 @@ class ConfigParser:
 					if "/" in file_path and file_path.endswith("*"):
 						# TODO: DO GLOBBING HERE
 						pass
-					elif file_path.startswith("~") and file_path.split("/")[
-						-1
-					].endswith(".conf"):
+					elif file_path.startswith("~") and file_path.split("/")[-1].endswith(".conf"):
 						# TODO: HOW?!
 						pass
 					else:
-						sources.append(
-							(config_path.parent / file_path).resolve()
-						)
+						sources.append((config_path.parent / file_path).resolve())
 
 			self.stack.pop()
 			if sources:

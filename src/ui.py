@@ -36,7 +36,7 @@ class Api:
 		print_hyprland(Node.from_json(json).to_hyprland(indent_level=0, save=True))
 		print("Saved to hyprland files")
 
-	def new_uuid(self, count: int):
+	def new_uuid(self, length: int):
 		return makeUUID(count)
 
 	def read_window_config(self):

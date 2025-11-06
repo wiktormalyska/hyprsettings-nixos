@@ -136,6 +136,7 @@ class ConfigTabs {
 		configSetTitle.textContent = sidebarItemTitle;
 		window.config["last_tab"] = id
 		window.currentView = "tabs"
+		window.activeTab = id
 		saveConfig()
 	}
 }

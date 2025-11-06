@@ -39,7 +39,7 @@ window.currentView = "tabs"; // default active tab index
 window.activeTab
 window.mainFocus = {}; // store focused element per tab
 window.currentFocus = null
-hotkeys('*', (event) => {
+hotkeys('*', (event) => { //fucking monolith
 	let focused = document.activeElement
 	if (event.key === "ArrowRight" && window.currentView === "tabs") {
 
@@ -60,7 +60,7 @@ hotkeys('*', (event) => {
 			}
 		} else {
 			const firstChild = Array.from(currentSet.children).find(
-				child => !child.classList.contains("settings-hidden")
+				child => !child.classList.contains("settings-hidden") && child.getAttribute("tabindex") != null
 			);
 
 			if (firstChild) {
@@ -69,8 +69,6 @@ hotkeys('*', (event) => {
 				window.mainFocus[window.activeTab] = firstChild.dataset.uuid || 0;
 				window.currentView = "main";
 			}
-			console.log(firstChild)
-
 		}
 	}
 
@@ -90,8 +88,15 @@ hotkeys('*', (event) => {
 			const currentSet = document.querySelector(`.config-set#${window.activeTab}`);
 			if (!currentSet) break;
 
-			const activeElement = currentSet.querySelector(`[data-uuid='${window.mainFocus[window.activeTab]}']`);
-			if (!activeElement) break;
+			let activeElement = currentSet.querySelector(`[data-uuid='${window.mainFocus[window.activeTab]}']`);
+			if (!activeElement) {
+				activeElement = document.activeElement
+				if (activeElement.getAttribute("tabindex") == null) {
+					break
+				}
+				// break;
+			}
+
 
 			const children = Array.from(currentSet.querySelectorAll(".editor-item"));
 			let index = children.indexOf(activeElement);
@@ -119,6 +124,7 @@ hotkeys('*', (event) => {
 
 			activeElement.blur();
 			const newActiveElement = children[newIndex];
+			if (!activeElement) break;
 			window.currentFocus = newActiveElement
 			newActiveElement.focus();
 			window.mainFocus[window.activeTab] = newActiveElement.dataset.uuid;
