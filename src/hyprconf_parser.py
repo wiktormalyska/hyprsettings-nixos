@@ -12,6 +12,7 @@ from rich import print
 import rich.pretty
 from rich.json import JSON
 import re
+import tomlkit
 
 rich.traceback.install(show_locals=True)
 
@@ -104,4 +105,9 @@ def get_config_descriptions() -> list:
 
 config_list = get_config_descriptions()
 jsonstring = json.dumps(config_list, indent=4)
-# print(jsonstring)
+print(
+	tomlkit.dumps(
+		{"config": [{k: (v if v is not None else "") for k, v in d.items()} for d in json.loads(jsonstring)]}
+	)
+)
+# print(tomlkit.dumps({'config': json.loads(jsonstring)}))

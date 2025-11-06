@@ -38,7 +38,7 @@ class CheckBoxItem {
 	}
 	addListeners() {
 		this.settingContainer.addEventListener("keydown", (e) => {
-			if (e.key === "Space") {
+			if (e.key === "Space" || e.key === "Enter") {
 				this.checkbox.click()
 			}
 		})

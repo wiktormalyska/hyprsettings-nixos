@@ -130,12 +130,17 @@ export class configRenderer {
             if (json["position"] && json["position"].split(":").length > 1) {
                 //
                 let group_el = new ConfiGroup(json).return()
-                // this.current_container.at(-1).appendChild(group_el)
+
+                let matched
                 for (const [key, value] of configGroups) {
                     if (json.name.trim().startsWith(key)) {
                         document.querySelector(`.config-set#${value}`).appendChild(group_el)
+                        matched = true
                         break
                     }
+                }
+                if (!matched) {
+                    this.current_container.at(-1).appendChild(group_el)
                 }
                 this.current_container.push(group_el)
             }
@@ -213,7 +218,7 @@ class EditorItem_Generic {
         let name = json["name"]
         let uuid = json["uuid"]
         let value = json["value"]
-        let comment = json["comment"] ? `${json["comment"]}` : ""
+        let comment = json["comment"]
         let position = json["position"]
         this.saveDebounced = debounce(() => this.save(), 250);
 
@@ -253,6 +258,8 @@ class EditorItem_Generic {
         this.genericEditor_el.appendChild(this.valueEditor)
         this.keyEditor.value = name
         this.valueEditor.value = value
+        this.commentArea = this.el.querySelector(".comment")
+        this.commentArea.value = this.el.dataset.comment
 
 
 
@@ -271,27 +278,24 @@ class EditorItem_Generic {
     }
 
     update() {
-        let name = this.el.dataset.name
-        let value = this.el.dataset.value
-        let comment = this.el.dataset.comment
-        this.preview_el.innerHTML = `<span id="key">${name} </span> <span id="value">${value}</span>&nbsp;${comment}`
+        let name = this.keyEditor.value
+        let value = this.valueEditor.value
+        let comment = this.commentArea.value ? `# ${this.commentArea.value}` : ""
+        this.preview_el.innerHTML = `<span id="key">${name} </span> <span id="value">${value}</span>&nbsp;<i>${comment}<i>`
         if (!this.inital_load) {
             this.saveDebounced()
         }
     }
     addListeners() {
         this.el.addEventListener("click", (e) => {
-
             this.el.classList.remove("compact")
             this.contextMenu.show()
         })
         this.el.addEventListener("contextmenu", (e) => {
             e.preventDefault()
-
             this.contextMenu.show()
         })
         this.el.addEventListener("dblclick", (e) => {
-
             this.el.classList.toggle("compact")
             this.contextMenu.hide()
         })
@@ -308,6 +312,20 @@ class EditorItem_Generic {
             this.contextMenu.hide()
             // this.el.classList.add("compact")
         })
+        this.keyEditor.addEventListener("input", () => {
+            this.el.dataset.name = this.keyEditor.value
+            this.update()
+        })
+        this.valueEditor.addEventListener("input", () => {
+            this.el.dataset.value = this.valueEditor.value
+            this.update()
+        })
+
+        this.commentArea.addEventListener("input", () => {
+            this.el.dataset.comment = this.commentArea.value
+            this.update()
+        })
+
     }
     addToParent(parent) {
         parent.appendChild(this.el)
