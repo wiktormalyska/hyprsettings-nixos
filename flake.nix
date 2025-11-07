@@ -6,15 +6,15 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
-        packages = {
+        packages = rec {
           default = pkgs.callPackage ./default.nix { };
-          hyprsettings = self.packages.${system}.default;
+          hyprsettings = default;
         };
 
         apps = {
@@ -36,26 +36,25 @@
           ];
         };
       }
-    ) // {
-      # NixOS module
+    )
+    // {
       nixosModules.default = { config, lib, pkgs, ... }:
         with lib;
         let
-          cfg = config.programs.hyprsettings;
-        in
-        {
+          system = pkgs.stdenv.hostPlatform.system;
+        in {
           options.programs.hyprsettings = {
             enable = mkEnableOption "HyprSettings configuration tool";
 
             package = mkOption {
               type = types.package;
-              default = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
               description = "The HyprSettings package to use";
+              default = self.packages.${system}.default;
             };
           };
 
-          config = mkIf cfg.enable {
-            environment.systemPackages = [ cfg.package ];
+          config = mkIf config.programs.hyprsettings.enable {
+            environment.systemPackages = [ config.programs.hyprsettings.package ];
           };
         };
     };
